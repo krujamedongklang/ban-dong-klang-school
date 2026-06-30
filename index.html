@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="เว็บไซต์อย่างเป็นทางการของโรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑) สังกัดสำนักงานเขตพื้นที่การศึกษาประถมศึกษาตราด">
+  <title>โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)</title>
+  
+  <!-- Google Fonts - Prompt & Sarabun for professional Thai typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="/src/style.css">
+  
+  <!-- Supabase CDN Client & Config -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/src/supabase-config.js"></script>
+</head>
+<body>
+  
+  <!-- Navigation Header -->
+  <header class="main-header">
+    <div class="container header-container">
+      <a href="#" class="logo-area">
+        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="header-logo">
+        <div class="logo-text">
+          <span class="school-name">โรงเรียนบ้านดงกลาง</span>
+          <span class="sub-name">(ธนาคารกรุงเทพ ๓๑)</span>
+        </div>
+      </a>
+      
+      <!-- Desktop Navigation Menu -->
+      <nav class="desktop-nav">
+        <ul>
+          <li><a href="#hero" class="nav-link active">หน้าแรก</a></li>
+          <li><a href="#about" class="nav-link">ข้อมูลโรงเรียน</a></li>
+          <li><a href="#administration" class="nav-link">ฝ่ายบริหารงาน</a></li>
+          <li><a href="#news" class="nav-link">ข่าวสารกิจกรรม</a></li>
+          <li><a href="#contact" class="nav-link">ติดต่อเรา</a></li>
+        </ul>
+      </nav>
+      
+      <!-- Mobile Toggle Button -->
+      <button class="mobile-nav-toggle" aria-label="เปิดเมนูนำทาง">
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+        <span class="hamburger-bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <div class="mobile-drawer-overlay"></div>
+  <aside class="mobile-drawer">
+    <div class="drawer-header">
+      <div class="drawer-logo">
+        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="drawer-logo-img">
+        <span class="drawer-title">บ้านดงกลาง</span>
+      </div>
+      <button class="drawer-close-btn">&times;</button>
+    </div>
+    <nav class="drawer-nav">
+      <ul>
+        <li><a href="#hero" class="drawer-link">หน้าแรก</a></li>
+        <li><a href="#about" class="drawer-link">ข้อมูลโรงเรียน</a></li>
+        <li><a href="#administration" class="drawer-link">ฝ่ายบริหารงาน</a></li>
+        <li><a href="#news" class="drawer-link">ข่าวสารกิจกรรม</a></li>
+        <li><a href="#contact" class="drawer-link">ติดต่อเรา</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Hero Banner Section -->
+  <section id="hero" class="hero-section">
+    <div class="hero-bg-overlay"></div>
+    <div class="container hero-container">
+      <div class="hero-content">
+        <div class="hero-badge">โรงเรียนคุณภาพประจำตำบล</div>
+        <h1 class="hero-title">โรงเรียนบ้านดงกลาง<br><span class="highlight-yellow">(ธนาคารกรุงเทพ ๓๑)</span></h1>
+        <p class="hero-subtitle">มุ่งเน้นพัฒนาการเรียนรู้ ควบคู่คุณธรรม นำเทคโนโลยี ส่งเสริมชีวีเป็นสุข<br>สังกัด สพป.ตราด</p>
+        <div class="hero-buttons">
+          <a href="#about" class="btn btn-primary">รู้จักเรา</a>
+          <a href="#news" class="btn btn-secondary">ข่าวประชาสัมพันธ์</a>
+        </div>
+      </div>
+      <div class="hero-logo-container">
+        <div class="logo-glow-effect animate-float"></div>
+        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="hero-logo-img animate-float">
+      </div>
+    </div>
+    
+    <!-- Wave separator -->
+    <div class="wave-separator">
+      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V0C26.9,8.75,57.05,18.3,90.57,26,176.62,45.77,252.32,64.8,321.39,56.44Z" class="shape-fill"></path>
+      </svg>
+    </div>
+  </section>
+
+  <!-- About / Director Section -->
+  <section id="about" class="about-section py-20">
+    <div class="container">
+      <div class="grid-2-columns">
+        
+        <!-- School Information Cards -->
+        <div class="school-info-details">
+          <div class="section-title-area">
+            <span class="sub-title">WELCOME TO OUR SCHOOL</span>
+            <h2 class="section-title">ข้อมูลทั่วไปของโรงเรียน</h2>
+            <div class="title-bar"></div>
+          </div>
+          <p class="about-desc">
+            โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑) ตั้งอยู่ที่ตำบลเขาสมิง อำเภอเขาสมิง จังหวัดตราด<br>
+            ได้รับความร่วมมือจากชุมชน และได้รับการสนับสนุนอาคารเรียนจากธนาคารกรุงเทพ (อาคารเรียนหลังที่ ๓๑)<br>
+            โดยเปิดทำการเรียนการสอน ตั้งแต่ระดับชั้นปฐมวัย ถึงระดับชั้นประถมศึกษา
+          </p>
+          
+          <div class="vision-mission-cards">
+            <div class="vm-card">
+              <div class="vm-icon"><i class="fa-solid fa-eye"></i></div>
+              <div class="vm-content">
+                <h3>วิสัยทัศน์ (Vision)</h3>
+                <p>จัดการศึกษาอย่างทั่วถึงและมีคุณภาพ พัฒนาผู้เรียนให้มีคุณธรรม จริยธรรม และสุขภาวะที่ดี<br>รวมถึงดำรงชีวิตตามหลักปรัชญาของเศรษฐกิจพอเพียง</p>
+              </div>
+            </div>
+            
+            <div class="vm-card">
+              <div class="vm-icon"><i class="fa-solid fa-bullseye"></i></div>
+              <div class="vm-content">
+                <h3>พันธกิจ (Mission)</h3>
+                <p>ส่งเสริมโอกาสทางการเรียนรู้ พัฒนาคุณภาพการจัดกิจกรรมการเรียนรู้แบบ Active Learning<br>ยกระดับระบบประกันคุณภาพการศึกษา และการมีส่วนร่วมของภาคีเครือข่าย</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Director Card -->
+        <div class="director-card-container">
+          <div class="director-card">
+            <div class="director-image-wrapper">
+              <img src="/director.png" alt="นางสาวสายใจ วิลัยทอง ผู้อำนวยการโรงเรียนบ้านดงกลาง" class="director-avatar">
+            </div>
+            <div class="director-info">
+              <span class="director-tag">ผู้บริหารสถานศึกษา</span>
+              <h3 class="director-name">นางสาวสายใจ วิลัยทอง</h3>
+              <p class="director-title">ผู้อำนวยการโรงเรียนบ้านดงกลาง</p>
+              <div class="director-divider"></div>
+              <p class="director-quote">"มุ่งมั่นพัฒนาคุณภาพการศึกษา ยกระดับความเป็นอยู่ของผู้เรียน<br>ร่วมมือกับชุมชน เพื่อผลสัมฤทธิ์ที่ยั่งยืน"</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 Administration Departments Section -->
+  <section id="administration" class="admin-section py-20 bg-light">
+    <div class="container">
+      
+      <div class="section-title-area text-center">
+        <span class="sub-title">SCHOOL MANAGEMENT</span>
+        <h2 class="section-title">โครงสร้างการบริหารงาน 4 ฝ่าย</h2>
+        <div class="title-bar center"></div>
+        <p class="section-subtitle">ขับเคลื่อนสถานศึกษาด้วยประสิทธิภาพและความเป็นเลิศในการจัดการรอบด้าน</p>
+      </div>
+
+      <div class="admin-grid">
+        
+        <!-- Academic Admin -->
+        <div class="admin-card" data-dept="academic">
+          <div class="card-bg-glow"></div>
+          <div class="admin-icon-wrapper">
+            <i class="fa-solid fa-book-open-reader"></i>
+          </div>
+          <h3 class="admin-card-title">กลุ่มบริหารวิชาการ</h3>
+          <p class="admin-card-desc">หัวใจสำคัญของการศึกษา พัฒนาหลักสูตร ประเมินผล และส่งเสริมกระบวนการเรียนรู้ที่มีประสิทธิภาพ</p>
+          <button class="btn-readmore">ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <!-- Budget Admin -->
+        <div class="admin-card" data-dept="budget">
+          <div class="card-bg-glow"></div>
+          <div class="admin-icon-wrapper">
+            <i class="fa-solid fa-calculator"></i>
+          </div>
+          <h3 class="admin-card-title">กลุ่มบริหารงบประมาณ</h3>
+          <p class="admin-card-desc">วางแผนงบประมาณ โปร่งใส ตรวจสอบได้ บริหารสินทรัพย์และทรัพยากรให้เกิดประโยชน์สูงสุด</p>
+          <button class="btn-readmore">ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <!-- Personnel Admin -->
+        <div class="admin-card" data-dept="personnel">
+          <div class="card-bg-glow"></div>
+          <div class="admin-icon-wrapper">
+            <i class="fa-solid fa-users-gear"></i>
+          </div>
+          <h3 class="admin-card-title">กลุ่มบริหารงานบุคคล</h3>
+          <p class="admin-card-desc">พัฒนาคณะครู บุคลากร เสริมสร้างวินัย คุณธรรมจริยธรรม และการจัดอัตรากำลังเพื่อผลงานที่ดี</p>
+          <button class="btn-readmore">ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+        <!-- General Admin -->
+        <div class="admin-card" data-dept="general">
+          <div class="card-bg-glow"></div>
+          <div class="admin-icon-wrapper">
+            <i class="fa-solid fa-building-user"></i>
+          </div>
+          <h3 class="admin-card-title">กลุ่มบริหารทั่วไป</h3>
+          <p class="admin-card-desc">ดูแลอาคารสถานที่ สภาพแวดล้อม ยานพาหนะ ประชาสัมพันธ์ และความสัมพันธ์กับชุมชนอย่างดี</p>
+          <button class="btn-readmore">ดูรายละเอียดเพิ่มเติม <i class="fa-solid fa-arrow-right"></i></button>
+        </div>
+
+      </div>
+      
+    </div>
+  </section>
+
+  <!-- News & Announcements Section (Connected to Supabase) -->
+  <section id="news" class="news-section py-20">
+    <div class="container">
+      
+      <div class="news-header">
+        <div class="section-title-area">
+          <span class="sub-title">UPDATES & ACTIVITIES</span>
+          <h2 class="section-title">ข่าวสารประชาสัมพันธ์</h2>
+          <div class="title-bar"></div>
+        </div>
+        <div class="news-filter">
+          <button class="filter-btn active" data-filter="all">ข่าวทั้งหมด</button>
+          <button class="filter-btn" data-filter="activity">กิจกรรมโรงเรียน</button>
+          <button class="filter-btn" data-filter="academic">ข่าวด้านวิชาการ</button>
+        </div>
+      </div>
+
+      <!-- News Grid / Dynamic Container -->
+      <div class="news-grid" id="news-container">
+        <!-- Loading State Placeholder -->
+        <div class="news-loading-skeleton">
+          <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-text line-1"></div>
+            <div class="skeleton-text line-2"></div>
+            <div class="skeleton-text line-3"></div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-text line-1"></div>
+            <div class="skeleton-text line-2"></div>
+            <div class="skeleton-text line-3"></div>
+          </div>
+          <div class="skeleton-card">
+            <div class="skeleton-image"></div>
+            <div class="skeleton-text line-1"></div>
+            <div class="skeleton-text line-2"></div>
+            <div class="skeleton-text line-3"></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="news-footer-text">
+        <p><i class="fa-solid fa-info-circle"></i> ข้อมูลข่าวสารจะดึงข้อมูลมาจากระบบหลังบ้านของ **Supabase** โดยอัตโนมัติ</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact Us Section -->
+  <section id="contact" class="contact-section py-20 bg-light">
+    <div class="container">
+      
+      <div class="section-title-area text-center">
+        <span class="sub-title">GET IN TOUCH</span>
+        <h2 class="section-title">ติดต่อเรา</h2>
+        <div class="title-bar center"></div>
+      </div>
+
+      <div class="grid-2-columns contact-content-grid">
+        
+        <!-- Contact Information & Map -->
+        <div class="contact-info-area">
+          <div class="contact-card-list">
+            
+            <div class="contact-detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-location-dot"></i></div>
+              <div class="detail-info">
+                <h4>ที่ตั้งโรงเรียน</h4>
+                <p>122/1 หมู่ที่ 5 ตำบลเขาสมิง อำเภอเขาสมิง จังหวัดตราด 23130</p>
+              </div>
+            </div>
+
+            <div class="contact-detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-phone"></i></div>
+              <div class="detail-info">
+                <h4>เบอร์โทรศัพท์</h4>
+                <p><a href="tel:039599502">039-599-502</a></p>
+              </div>
+            </div>
+
+            <div class="contact-detail-item">
+              <div class="detail-icon"><i class="fa-solid fa-school"></i></div>
+              <div class="detail-info">
+                <h4>สังกัด</h4>
+                <p>สำนักงานเขตพื้นที่การศึกษาประถมศึกษาตราด (สพป.ตราด)</p>
+              </div>
+            </div>
+            
+          </div>
+          
+          <!-- Embedded Map -->
+          <div class="map-wrapper">
+            <iframe 
+              src="https://maps.google.com/maps?q=โรงเรียนบ้านดงกลาง%20ตราด&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+              width="100%" 
+              height="300" 
+              style="border:0; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);" 
+              allowfullscreen="" 
+              loading="lazy" 
+              referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+          </div>
+        </div>
+
+        <!-- Contact Form -->
+        <div class="contact-form-area">
+          <h3 class="form-title">ส่งข้อความติดต่อสอบถาม</h3>
+          <p class="form-subtitle">กรอกข้อมูลด้านล่าง ข้อความของคุณจะถูกส่งบันทึกลงฐานข้อมูล Supabase และเจ้าหน้าที่จะดำเนินการต่อไป</p>
+          
+          <form id="contact-form" class="main-contact-form">
+            <div class="form-group">
+              <label for="form-name"><i class="fa-solid fa-user"></i> ชื่อ-นามสกุล <span class="required">*</span></label>
+              <input type="text" id="form-name" required placeholder="เช่น นายสมชาย ใจดี">
+            </div>
+            
+            <div class="form-group">
+              <label for="form-email"><i class="fa-solid fa-envelope"></i> อีเมล <span class="required">*</span></label>
+              <input type="email" id="form-email" required placeholder="เช่น somchai@email.com">
+            </div>
+            
+            <div class="form-group">
+              <label for="form-subject"><i class="fa-solid fa-pen-nib"></i> เรื่องที่ต้องการติดต่อ <span class="required">*</span></label>
+              <input type="text" id="form-subject" required placeholder="เช่น สมัครเรียน, สอบถามข้อมูลเพิ่มเติม">
+            </div>
+            
+            <div class="form-group">
+              <label for="form-message"><i class="fa-solid fa-comment-dots"></i> ข้อความรายละเอียด <span class="required">*</span></label>
+              <textarea id="form-message" rows="5" required placeholder="พิมพ์ข้อความของคุณที่นี่..."></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary btn-block" id="form-submit-btn">
+              <span class="btn-text">ส่งข้อความ</span>
+              <span class="btn-spinner"><i class="fa-solid fa-spinner fa-spin"></i></span>
+            </button>
+            
+            <!-- Success/Error alert box -->
+            <div class="form-alert-message" id="form-alert"></div>
+          </form>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="main-footer">
+    <div class="container footer-container">
+      <div class="footer-brand">
+        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="footer-logo">
+        <div>
+          <h3>โรงเรียนบ้านดงกลาง</h3>
+          <p>(ธนาคารกรุงเทพ ๓๑) จ.ตราด</p>
+        </div>
+      </div>
+      <div class="footer-links">
+        <h4>ลิงก์ด่วน</h4>
+        <ul>
+          <li><a href="#hero">หน้าแรก</a></li>
+          <li><a href="#about">ข้อมูลทั่วไป</a></li>
+          <li><a href="#administration">ฝ่ายบริหารงาน</a></li>
+          <li><a href="#news">ข่าวสารกิจกรรม</a></li>
+        </ul>
+      </div>
+      <div class="footer-socials">
+        <h4>ช่องทางการติดตาม</h4>
+        <div class="social-icons">
+          <a href="#" class="social-icon" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="social-icon" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+          <a href="tel:039599502" class="social-icon" aria-label="Phone"><i class="fa-solid fa-phone"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑). All Rights Reserved.</p>
+      <p class="design-credit">Designed with <i class="fa-solid fa-heart"></i> for educational excellence</p>
+    </div>
+  </footer>
+
+  <!-- Detail Modals -->
+  
+  <!-- Administration Detail Modal -->
+  <div class="modal-overlay" id="admin-modal">
+    <div class="modal-card">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-header-accent"></div>
+      <div class="modal-body-content">
+        <div class="modal-icon-area"></div>
+        <h3 class="modal-title-text">หัวข้อฝ่ายบริหาร</h3>
+        <p class="modal-subtitle-text">รายละเอียดโครงสร้างและหน้าที่รับผิดชอบ</p>
+        <div class="modal-divider"></div>
+        <div class="modal-detail-list">
+          <!-- Populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- News Detail Modal -->
+  <div class="modal-overlay" id="news-modal">
+    <div class="modal-card news-modal-card">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-body-content">
+        <div class="news-modal-image-wrapper">
+          <img src="" alt="ภาพประกอบข่าว" id="news-modal-img">
+        </div>
+        <div class="news-modal-info">
+          <span class="news-modal-date" id="news-modal-date"><i class="fa-solid fa-calendar-days"></i> 30 มิ.ย. 2026</span>
+          <span class="news-modal-tag" id="news-modal-tag">ข่าวประชาสัมพันธ์</span>
+          <h3 class="news-modal-title" id="news-modal-title">หัวข้อข่าว</h3>
+          <div class="modal-divider"></div>
+          <div class="news-modal-content" id="news-modal-content">
+            <!-- News details -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript Entry Point -->
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
