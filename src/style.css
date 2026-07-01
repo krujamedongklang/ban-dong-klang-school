@@ -557,7 +557,8 @@ ul {
   font-size: 1.02rem;
   color: var(--gray-800);
   margin-bottom: 30px;
-  text-indent: 1.5em;
+  text-align: center;
+  text-indent: 0;
 }
 
 .vision-mission-cards {
