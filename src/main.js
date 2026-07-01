@@ -383,9 +383,17 @@ function renderNews(newsItems) {
       ? `<img src="${item.image_url}" alt="${item.title}" class="news-card-img">`
       : `<div class="news-image-placeholder"><i class="fa-solid fa-school"></i></div>`;
 
+    const actionButtons = isAdminMode ? `
+      <div class="news-card-actions">
+        <button class="btn-action btn-edit-news" data-id="${item.id}" title="แก้ไขข่าว"><i class="fa-solid fa-pencil"></i></button>
+        <button class="btn-action btn-delete-news" data-id="${item.id}" title="ลบข่าว"><i class="fa-solid fa-trash-can"></i></button>
+      </div>
+    ` : '';
+
     cardsHtml += `
       <article class="news-card" data-news-id="${item.id}">
         <div class="news-image-wrapper">
+          ${actionButtons}
           <span class="news-tag">${categoryName}</span>
           ${imageHtml}
         </div>
@@ -404,12 +412,18 @@ function renderNews(newsItems) {
   // Setup click handler for each news card to open detail modal
   const newsCards = container.querySelectorAll('.news-card');
   newsCards.forEach(card => {
-    card.addEventListener('click', () => {
+    card.addEventListener('click', (e) => {
+      // If clicking inside actions wrapper, do not open details modal
+      if (e.target.closest('.news-card-actions')) return;
+
       const id = parseInt(card.getAttribute('data-news-id'));
       const newsItem = allNewsData.find(item => item.id === id);
       if (newsItem) openNewsModal(newsItem);
     });
   });
+
+  // Setup event listeners for edit and delete news buttons
+  setupNewsCardActions();
 }
 
 // News Detail Modal Open/Close
@@ -861,6 +875,9 @@ function setupAdminDashboard() {
       }
     });
   }
+
+  // Initialize News Admin setup
+  setupNewsAdmin();
 }
 
 // Function to upload photos to Supabase Storage
@@ -890,9 +907,12 @@ function loginAdmin() {
   isAdminMode = true;
   document.body.classList.add('admin-mode-active');
   
-  // Show Add button container
+  // Show Add buttons containers
   const addBtnContainer = document.getElementById('admin-add-btn-container');
   if (addBtnContainer) addBtnContainer.style.display = 'block';
+
+  const addNewsBtnContainer = document.getElementById('admin-news-btn-container');
+  if (addNewsBtnContainer) addNewsBtnContainer.style.display = 'block';
 
   // Add the green floating badge indicator
   let badge = document.getElementById('admin-badge-indicator');
@@ -902,7 +922,7 @@ function loginAdmin() {
     badge.className = 'admin-badge-indicator';
     badge.innerHTML = `
       <i class="fa-solid fa-unlock-keyhole"></i> 
-      <span>ระบบจัดการครู (Active)</span>
+      <span>ระบบจัดการข้อมูล (Active)</span>
       <button class="btn-logout" id="admin-logout-btn">ออกจากระบบ</button>
     `;
     document.body.appendChild(badge);
@@ -913,8 +933,9 @@ function loginAdmin() {
     badge.style.display = 'flex';
   }
 
-  // Refresh view to display card actions
+  // Refresh views to display card actions
   fetchAndRenderTeachers();
+  renderNews(allNewsData);
 }
 
 // Helper to logout Admin Mode
@@ -925,11 +946,15 @@ function logoutAdmin() {
   const addBtnContainer = document.getElementById('admin-add-btn-container');
   if (addBtnContainer) addBtnContainer.style.display = 'none';
 
+  const addNewsBtnContainer = document.getElementById('admin-news-btn-container');
+  if (addNewsBtnContainer) addNewsBtnContainer.style.display = 'none';
+
   const badge = document.getElementById('admin-badge-indicator');
   if (badge) badge.style.display = 'none';
 
-  // Refresh view to hide actions
+  // Refresh views to hide actions
   fetchAndRenderTeachers();
+  renderNews(allNewsData);
 }
 
 // Bind clicks to Card actions (Edit/Delete)
@@ -1004,4 +1029,339 @@ function setupTeacherCardActions() {
       }
     });
   });
+}
+
+function setupNewsCardActions() {
+  if (!isAdminMode) return;
+
+  // Edit News Actions
+  document.querySelectorAll('.btn-edit-news').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const newsItem = allNewsData.find(item => item.id == id);
+      if (newsItem) {
+        const newsModal = document.getElementById('news-form-modal');
+        const newsIdInput = document.getElementById('news-id');
+        const newsTitleInput = document.getElementById('news-form-title-input');
+        const newsCategoryInput = document.getElementById('news-form-category-input');
+        const newsDateInput = document.getElementById('news-form-date-input');
+        const newsContentInput = document.getElementById('news-form-content-input');
+        const photoPreview = document.getElementById('news-photo-preview');
+        const previewState = document.getElementById('drag-drop-preview-state');
+        const idleState = document.getElementById('drag-drop-idle-state');
+        const modalFormTitle = document.getElementById('news-modal-form-title');
+        const submitBtn = document.getElementById('news-form-submit-btn');
+
+        newsIdInput.value = newsItem.id;
+        newsTitleInput.value = newsItem.title;
+        newsCategoryInput.value = newsItem.category;
+        newsDateInput.value = newsItem.date;
+        newsContentInput.value = newsItem.content;
+
+        if (newsItem.image_url) {
+          photoPreview.src = newsItem.image_url;
+          previewState.style.display = 'flex';
+          idleState.style.display = 'none';
+        } else {
+          photoPreview.src = '';
+          previewState.style.display = 'none';
+          idleState.style.display = 'block';
+        }
+
+        modalFormTitle.textContent = 'แก้ไขข่าวสารประชาสัมพันธ์';
+        submitBtn.textContent = 'อัปเดตข่าวสาร';
+        newsModal.classList.add('open');
+      }
+    });
+  });
+
+  // Delete News Actions
+  document.querySelectorAll('.btn-delete-news').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const newsItem = allNewsData.find(item => item.id == id);
+      if (newsItem) {
+        if (confirm(`คุณต้องการลบข่าวสารหัวข้อ "${newsItem.title}" ออกจากระบบจริงหรือไม่?`)) {
+          try {
+            if (supabase) {
+              const { error } = await supabase
+                .from('news')
+                .delete()
+                .eq('id', id);
+              if (error) throw error;
+              
+              // Reload from Supabase
+              const { data, error: fetchErr } = await supabase
+                .from('news')
+                .select('*')
+                .order('date', { ascending: false });
+              if (!fetchErr) allNewsData = data || [];
+            } else {
+              // Mock Delete
+              const idx = allNewsData.findIndex(item => item.id == id);
+              if (idx !== -1) allNewsData.splice(idx, 1);
+            }
+            
+            // Re-render
+            const activeFilterBtn = document.querySelector('.filter-btn.active');
+            const activeFilter = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
+            if (activeFilter === 'all') {
+              renderNews(allNewsData);
+            } else {
+              renderNews(allNewsData.filter(item => item.category === activeFilter));
+            }
+          } catch (err) {
+            console.error("Error deleting news:", err);
+            alert("เกิดข้อผิดพลาดในการลบข่าวสาร: " + err.message);
+          }
+        }
+      }
+    });
+  });
+}
+
+function setupNewsAdmin() {
+  const addNewsBtn = document.getElementById('add-news-btn');
+  const newsModal = document.getElementById('news-form-modal');
+  const newsForm = document.getElementById('news-form');
+  const newsIdInput = document.getElementById('news-id');
+  const newsTitleInput = document.getElementById('news-form-title-input');
+  const newsCategoryInput = document.getElementById('news-form-category-input');
+  const newsDateInput = document.getElementById('news-form-date-input');
+  const newsContentInput = document.getElementById('news-form-content-input');
+  const photoInput = document.getElementById('news-photo-input');
+  const photoPreview = document.getElementById('news-photo-preview');
+  const previewState = document.getElementById('drag-drop-preview-state');
+  const idleState = document.getElementById('drag-drop-idle-state');
+  const dragDropZone = document.getElementById('news-drag-drop-zone');
+  const removePhotoBtn = document.getElementById('remove-news-photo-btn');
+  const modalFormTitle = document.getElementById('news-modal-form-title');
+  const submitBtn = document.getElementById('news-form-submit-btn');
+
+  if (!newsForm) return;
+
+  // 1. Open Add News Form
+  if (addNewsBtn) {
+    addNewsBtn.addEventListener('click', () => {
+      newsForm.reset();
+      newsIdInput.value = '';
+      
+      // Set default date to today (Bangkok timezone / Local ISO Date YYYY-MM-DD)
+      const today = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD format
+      newsDateInput.value = today;
+      
+      photoPreview.src = '';
+      previewState.style.display = 'none';
+      idleState.style.display = 'block';
+      
+      modalFormTitle.textContent = 'เขียนข่าวสารใหม่';
+      submitBtn.textContent = 'บันทึกข่าวสาร';
+      newsModal.classList.add('open');
+    });
+  }
+
+  // 2. File preview handler
+  if (photoInput) {
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files[0];
+      handleNewsPhotoSelected(file);
+    });
+  }
+
+  // 3. Remove photo button
+  if (removePhotoBtn) {
+    removePhotoBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      photoInput.value = '';
+      photoPreview.src = '';
+      previewState.style.display = 'none';
+      idleState.style.display = 'block';
+    });
+  }
+
+  // 4. Drag & Drop functionality
+  if (dragDropZone) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dragDropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragDropZone.classList.add('dragover');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dragDropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dragDropZone.classList.remove('dragover');
+      }, false);
+    });
+
+    dragDropZone.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files && files[0]) {
+        photoInput.files = files; // Assign files to input
+        handleNewsPhotoSelected(files[0]);
+      }
+    }, false);
+  }
+
+  // 5. Copy & Paste Image functionality
+  document.addEventListener('paste', (e) => {
+    // Only handle paste if news form modal is open
+    if (!newsModal.classList.contains('open')) return;
+    
+    const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    for (let i = 0; i < items.length; i++) {
+      if (items[i].type.indexOf('image') !== -1) {
+        const blob = items[i].getAsFile();
+        const file = new File([blob], `pasted-image-${Date.now()}.png`, { type: blob.type });
+        
+        // Create a DataTransfer object to assign the file to the input element
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        photoInput.files = dataTransfer.files;
+        
+        handleNewsPhotoSelected(file);
+        break; // Process only the first image found
+      }
+    }
+  });
+
+  // Helper to display selected photo preview
+  function handleNewsPhotoSelected(file) {
+    if (file && file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        photoPreview.src = e.target.result;
+        previewState.style.display = 'flex';
+        idleState.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  // 6. News Form Submit
+  newsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const id = newsIdInput.value;
+    const title = newsTitleInput.value.trim();
+    const category = newsCategoryInput.value;
+    const date = newsDateInput.value;
+    const content = newsContentInput.value.trim();
+    const photoFile = photoInput.files[0];
+
+    if (!title || !category || !date || !content) {
+      alert("กรุณากรอกข้อมูลข่าวสารให้ครบถ้วนทุกช่อง");
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'กำลังบันทึกข่าวสาร...';
+
+    try {
+      // Keep existing photo URL if editing and no new photo was selected
+      let image_url = photoPreview.src && previewState.style.display === 'flex' ? photoPreview.src : '';
+
+      // Upload to Supabase Storage if file selected
+      if (photoFile && supabase) {
+        try {
+          image_url = await uploadNewsPhoto(photoFile);
+        } catch (uploadErr) {
+          console.error("Upload error:", uploadErr);
+          alert("ไม่สามารถอัปโหลดรูปภาพไปยัง Supabase Storage ได้ จะเซฟข้อมูลรูปภาพแบบโลคอล");
+        }
+      }
+
+      const payload = {
+        title,
+        category,
+        date,
+        content,
+        image_url
+      };
+
+      if (supabase) {
+        if (id) {
+          // Update
+          const { error } = await supabase
+            .from('news')
+            .update(payload)
+            .eq('id', id);
+          if (error) throw error;
+        } else {
+          // Insert
+          const { error } = await supabase
+            .from('news')
+            .insert([payload]);
+          if (error) throw error;
+        }
+      } else {
+        // Mock Local News updates
+        if (id) {
+          const idx = allNewsData.findIndex(item => item.id === parseInt(id, 10));
+          if (idx !== -1) {
+            allNewsData[idx] = { ...allNewsData[idx], ...payload };
+          }
+        } else {
+          const newId = allNewsData.length > 0 ? Math.max(...allNewsData.map(item => item.id)) + 1 : 1;
+          allNewsData.unshift({ id: newId, ...payload });
+        }
+      }
+
+      // Close modal and refresh list
+      newsModal.classList.remove('open');
+      
+      // Reload news
+      if (supabase) {
+        // Fetch from Supabase
+        const { data, error } = await supabase
+          .from('news')
+          .select('*')
+          .order('date', { ascending: false });
+        if (!error) allNewsData = data || [];
+      }
+      
+      // Re-render
+      const activeFilterBtn = document.querySelector('.filter-btn.active');
+      const activeFilter = activeFilterBtn ? activeFilterBtn.getAttribute('data-filter') : 'all';
+      if (activeFilter === 'all') {
+        renderNews(allNewsData);
+      } else {
+        renderNews(allNewsData.filter(item => item.category === activeFilter));
+      }
+      
+    } catch (err) {
+      console.error("Error saving news:", err);
+      alert("เกิดข้อผิดพลาดในการบันทึกข่าวสาร: " + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'บันทึกข่าวสาร';
+    }
+  });
+}
+
+async function uploadNewsPhoto(file) {
+  if (!supabase) return '';
+  
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  // Save in 'news/' subfolder inside 'teachers' bucket
+  const filePath = `news/${fileName}`;
+
+  const { data, error } = await supabase.storage
+    .from('teachers')
+    .upload(filePath, file);
+
+  if (error) throw error;
+
+  const { data: publicUrlData } = supabase.storage
+    .from('teachers')
+    .getPublicUrl(filePath);
+
+  return publicUrlData.publicUrl;
 }

@@ -331,10 +331,18 @@
           <h2 class="section-title">ข่าวสารประชาสัมพันธ์</h2>
           <div class="title-bar"></div>
         </div>
-        <div class="news-filter">
-          <button class="filter-btn active" data-filter="all">ข่าวทั้งหมด</button>
-          <button class="filter-btn" data-filter="activity">กิจกรรมโรงเรียน</button>
-          <button class="filter-btn" data-filter="academic">ข่าวด้านวิชาการ</button>
+        <div class="news-header-right" style="display: flex; flex-direction: column; align-items: flex-end; gap: 15px;">
+          <!-- Add New News Button (Only visible in Admin Edit Mode) -->
+          <div id="admin-news-btn-container" class="admin-only" style="display: none;">
+            <button id="add-news-btn" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px;">
+              <i class="fa-solid fa-file-circle-plus"></i> เขียนข่าวสารใหม่
+            </button>
+          </div>
+          <div class="news-filter">
+            <button class="filter-btn active" data-filter="all">ข่าวทั้งหมด</button>
+            <button class="filter-btn" data-filter="activity">กิจกรรมโรงเรียน</button>
+            <button class="filter-btn" data-filter="academic">ข่าวด้านวิชาการ</button>
+          </div>
         </div>
       </div>
 
@@ -607,6 +615,73 @@
           </div>
 
           <button type="submit" class="btn btn-primary" id="teacher-form-submit-btn" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">บันทึกข้อมูล</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- News Form Modal -->
+  <div class="modal-overlay" id="news-form-modal">
+    <div class="modal-card" style="max-width: 600px;">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-header-accent"></div>
+      <div class="modal-body-content" style="padding: 35px 25px; box-sizing: border-box;">
+        <h3 class="modal-title-text" id="news-modal-form-title" style="font-size: 1.5rem; margin-bottom: 5px; color: var(--dark-color);">เขียนข่าวสารใหม่</h3>
+        <p class="modal-subtitle-text" style="color: var(--gray-500); margin-top: 0; margin-bottom: 15px;">กรอกข้อมูลข่าวสารพร้อมอัปโหลดภาพกิจกรรม</p>
+        <div class="modal-divider" style="height: 1px; background-color: var(--gray-200); margin-bottom: 20px;"></div>
+        
+        <form id="news-form">
+          <input type="hidden" id="news-id">
+          
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="news-form-title-input" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-heading"></i> หัวข้อข่าวสาร <span class="required" style="color: var(--primary-red);">*</span></label>
+            <input type="text" id="news-form-title-input" required placeholder="พิมพ์หัวข้อข่าวสารที่ต้องการให้แสดงผล" style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box;">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 16px;">
+            <div class="form-group">
+              <label for="news-form-category-input" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-tags"></i> หมวดหมู่ข่าว <span class="required" style="color: var(--primary-red);">*</span></label>
+              <select id="news-form-category-input" required style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box;">
+                <option value="activity">กิจกรรมโรงเรียน (General Activity)</option>
+                <option value="academic">ข่าวด้านวิชาการ (Academic News)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="news-form-date-input" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-calendar-day"></i> วันที่เผยแพร่ <span class="required" style="color: var(--primary-red);">*</span></label>
+              <input type="date" id="news-form-date-input" required style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box;">
+            </div>
+          </div>
+
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="news-form-content-input" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-align-left"></i> เนื้อหาข่าวสารโดยละเอียด <span class="required" style="color: var(--primary-red);">*</span></label>
+            <textarea id="news-form-content-input" required rows="6" placeholder="พิมพ์รายละเอียดและเนื้อหาข่าวสารประชาสัมพันธ์ตรงนี้..." style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box; resize: vertical; line-height: 1.6;"></textarea>
+          </div>
+
+          <div class="form-group mb-6" style="margin-bottom: 24px;">
+            <label style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-image"></i> รูปภาพกิจกรรม/หน้าปกข่าว</label>
+            
+            <!-- Drag and drop zone -->
+            <div id="news-drag-drop-zone" class="drag-drop-zone" style="border: 2px dashed rgba(168, 30, 46, 0.2); background-color: var(--gray-50); border-radius: 12px; padding: 25px 15px; text-align: center; cursor: pointer; transition: all 0.3s ease; position: relative;">
+              <!-- Hidden input file -->
+              <input type="file" id="news-photo-input" accept="image/*" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 5;">
+              
+              <div id="drag-drop-idle-state">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 2.8rem; color: var(--primary-red); opacity: 0.7; margin-bottom: 10px;"></i>
+                <p style="margin: 0 0 5px; font-weight: 600; font-size: 0.95rem; color: var(--dark-color);">ลากไฟล์รูปภาพมาวางที่นี่ หรือคลิกเพื่ออัปโหลด</p>
+                <p style="margin: 0; font-size: 0.8rem; color: var(--gray-500);">รองรับไฟล์ JPG, PNG (สามารถกด Ctrl + V เพื่อวางรูปภาพได้)</p>
+              </div>
+
+              <!-- Preview State -->
+              <div id="drag-drop-preview-state" style="display: none; align-items: center; justify-content: center; flex-direction: column;">
+                <div style="max-width: 280px; max-height: 160px; overflow: hidden; border-radius: 8px; border: 2px solid var(--white); box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 10px;">
+                  <img id="news-photo-preview" src="" alt="พรีวิวรูปภาพข่าว" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <button type="button" id="remove-news-photo-btn" style="background-color: var(--primary-red); color: var(--white); border: none; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; z-index: 10; position: relative;"><i class="fa-solid fa-trash-can"></i> ลบรูปภาพ</button>
+              </div>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="news-form-submit-btn" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">บันทึกข่าวสาร</button>
         </form>
       </div>
     </div>
