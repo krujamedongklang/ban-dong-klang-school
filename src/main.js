@@ -133,19 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupContactForm();
   fetchAndRenderTeachers();
   setupAdminDashboard();
-
-  // Close all modals when Escape key is pressed
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-      document.querySelectorAll('.modal-overlay.open').forEach(modal => {
-        modal.classList.remove('open');
-        
-        // Clear login error message if it's the login modal
-        const loginError = document.getElementById('login-error-msg');
-        if (loginError) loginError.style.display = 'none';
-      });
-    }
-  });
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
