@@ -1735,3 +1735,191 @@ ul {
   color: var(--primary-red);
   text-decoration: underline;
 }
+
+/* ==========================================================================
+   Staff Directory Styles
+   ========================================================================== */
+.teachers-section {
+  background-color: var(--white);
+}
+
+.director-display-row {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 50px;
+}
+
+.teachers-grid-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+/* Teacher Card design */
+.teacher-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  padding: 30px 20px;
+  text-align: center;
+  border: 1px solid var(--gray-100);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.teacher-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(168, 30, 46, 0.08);
+  border-color: rgba(168, 30, 46, 0.15);
+}
+
+/* Accent top border for director card, golden color */
+.teacher-card.director-card-style {
+  max-width: 320px;
+  width: 100%;
+  border-top: 4px solid var(--secondary-yellow);
+  box-shadow: 0 15px 35px rgba(168, 30, 46, 0.06);
+}
+
+.teacher-card.staff-card-style {
+  border-top: 4px solid var(--primary-red);
+}
+
+.teacher-avatar-container {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin: 0 auto 20px;
+  border: 3px solid var(--white);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  background-color: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.teacher-avatar-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.teacher-avatar-container i {
+  font-size: 3.5rem;
+  color: var(--gray-400);
+}
+
+.teacher-name-text {
+  font-size: 1.15rem;
+  color: var(--dark-color);
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.teacher-card.director-card-style .teacher-name-text {
+  font-size: 1.25rem;
+}
+
+.teacher-position-text {
+  font-size: 0.9rem;
+  color: var(--primary-red);
+  font-weight: 500;
+  margin-bottom: 0;
+  background-color: var(--primary-red-light);
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.teacher-card.director-card-style .teacher-position-text {
+  background-color: rgba(255, 183, 3, 0.1);
+  color: #B58400; /* Dark golden */
+}
+
+/* Edit Mode styling */
+.admin-badge-indicator {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  background-color: #10B981; /* Green */
+  color: var(--white);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-badge-indicator .btn-logout {
+  background: none;
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.85rem;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.teacher-card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 6px;
+  z-index: 10;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.3s ease;
+}
+
+.teacher-card:hover .teacher-card-actions,
+body.admin-mode-active .teacher-card .teacher-card-actions {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.btn-action {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: all 0.2s ease;
+}
+
+.btn-action.btn-edit {
+  background-color: #F59E0B; /* Yellow-orange */
+}
+
+.btn-action.btn-edit:hover {
+  background-color: #D97706;
+}
+
+.btn-action.btn-delete {
+  background-color: #EF4444; /* Red */
+}
+
+.btn-action.btn-delete:hover {
+  background-color: #DC2626;
+}
+
+/* Spinner Animation */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

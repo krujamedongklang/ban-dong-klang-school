@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDepartmentModals();
   fetchAndRenderNews();
   setupContactForm();
+  fetchAndRenderTeachers();
+  setupAdminDashboard();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -551,5 +553,455 @@ function setupContactForm() {
     // Reset Loading state
     submitBtn.classList.remove('loading');
     submitBtn.disabled = false;
+  });
+}
+
+// ==========================================================================
+// 6. Staff Directory & Admin Dashboard Logic
+// ==========================================================================
+
+// Mock Teachers Data (For offline use or fallback)
+let mockTeachers = [
+  {
+    id: 1,
+    name: "นางสาวสายใจ วิลัยทอง",
+    position: "ผู้อำนวยการโรงเรียนบ้านดงกลาง",
+    image_url: "/director.png",
+    order_index: 1
+  },
+  {
+    id: 2,
+    name: "นางสาวนพรัตน์ วิสพันธ์",
+    position: "ครูชำนาญการพิเศษ (หัวหน้าฝ่ายบริหารงบประมาณ)",
+    image_url: "",
+    order_index: 2
+  },
+  {
+    id: 3,
+    name: "นางชูชื่น บุตรฉิม",
+    position: "ครูชำนาญการ (หัวหน้าฝ่ายบริหารทั่วไป)",
+    image_url: "",
+    order_index: 3
+  },
+  {
+    id: 4,
+    name: "นางสาวสิริมน จันทสาร",
+    position: "ครู (หัวหน้าฝ่ายบริหารวิชาการ)",
+    image_url: "",
+    order_index: 4
+  },
+  {
+    id: 5,
+    name: "นางธีรกานต์ กุมภะ",
+    position: "ครูชำนาญการพิเศษ",
+    image_url: "",
+    order_index: 5
+  }
+];
+
+let isAdminMode = false;
+let allTeachers = [];
+
+async function fetchAndRenderTeachers() {
+  const loadingElement = document.getElementById('teachers-loading');
+  const emptyElement = document.getElementById('teachers-empty');
+  const directorRow = document.getElementById('director-row');
+  const teachersGrid = document.getElementById('teachers-grid');
+
+  if (!directorRow || !teachersGrid) return;
+
+  // Show Loading state
+  loadingElement.style.display = 'block';
+  emptyElement.style.display = 'none';
+  directorRow.innerHTML = '';
+  teachersGrid.innerHTML = '';
+
+  try {
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('teachers')
+        .select('*')
+        .order('order_index', { ascending: true })
+        .order('id', { ascending: true });
+
+      if (error) throw error;
+      allTeachers = data || [];
+    } else {
+      // Offline fallback
+      allTeachers = [...mockTeachers].sort((a, b) => a.order_index - b.order_index);
+    }
+  } catch (err) {
+    console.error("Error fetching teachers from Supabase:", err);
+    // Fallback to mock on db error
+    allTeachers = [...mockTeachers].sort((a, b) => a.order_index - b.order_index);
+  }
+
+  // Hide loading state
+  loadingElement.style.display = 'none';
+
+  if (allTeachers.length === 0) {
+    emptyElement.style.display = 'block';
+    return;
+  }
+
+  // Find the Director (order_index = 1 or top teacher)
+  const director = allTeachers.find(t => t.order_index === 1);
+  const staff = allTeachers.filter(t => t.order_index !== 1);
+
+  // Render Director
+  if (director) {
+    directorRow.innerHTML = renderTeacherCard(director, true);
+  }
+
+  // Render Staff Grid
+  if (staff.length > 0) {
+    teachersGrid.innerHTML = staff.map(t => renderTeacherCard(t, false)).join('');
+  }
+
+  // Setup event listeners for edit and delete buttons
+  setupTeacherCardActions();
+}
+
+function renderTeacherCard(teacher, isDirector) {
+  const avatarHtml = teacher.image_url 
+    ? `<img src="${teacher.image_url}" alt="${teacher.name}">` 
+    : `<i class="fa-solid fa-user-tie"></i>`;
+
+  const cardClass = isDirector ? 'director-card-style' : 'staff-card-style';
+
+  const actionButtons = isAdminMode ? `
+    <div class="teacher-card-actions">
+      <button class="btn-action btn-edit" data-id="${teacher.id}" title="แก้ไขข้อมูล"><i class="fa-solid fa-pencil"></i></button>
+      <button class="btn-action btn-delete" data-id="${teacher.id}" title="ลบข้อมูล"><i class="fa-solid fa-trash-can"></i></button>
+    </div>
+  ` : '';
+
+  return `
+    <div class="teacher-card ${cardClass}" id="teacher-card-${teacher.id}">
+      ${actionButtons}
+      <div class="teacher-avatar-container">
+        ${avatarHtml}
+      </div>
+      <h3 class="teacher-name-text">${teacher.name}</h3>
+      <p class="teacher-position-text">${teacher.position}</p>
+    </div>
+  `;
+}
+
+function setupAdminDashboard() {
+  const loginTrigger = document.getElementById('admin-login-trigger');
+  const loginModal = document.getElementById('admin-login-modal');
+  const loginForm = document.getElementById('admin-login-form');
+  const passwordInput = document.getElementById('admin-password');
+  const loginError = document.getElementById('login-error-msg');
+  const addBtnContainer = document.getElementById('admin-add-btn-container');
+  const addTeacherBtn = document.getElementById('add-teacher-btn');
+
+  // Teacher modal and form elements
+  const teacherModal = document.getElementById('teacher-form-modal');
+  const teacherForm = document.getElementById('teacher-form');
+  const teacherIdInput = document.getElementById('teacher-id');
+  const teacherNameInput = document.getElementById('teacher-name');
+  const teacherPositionInput = document.getElementById('teacher-position');
+  const teacherOrderInput = document.getElementById('teacher-order');
+  const photoInput = document.getElementById('teacher-photo-input');
+  const photoPreview = document.getElementById('teacher-photo-preview');
+  const photoPlaceholder = document.getElementById('teacher-photo-placeholder');
+  const modalTitle = document.getElementById('teacher-modal-title');
+  const submitBtn = document.getElementById('teacher-form-submit-btn');
+
+  if (!loginTrigger) return;
+
+  // 1. Manage Modal overlays close buttons
+  document.querySelectorAll('.modal-overlay').forEach(modalOverlay => {
+    const closeBtn = modalOverlay.querySelector('.modal-close-btn');
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        modalOverlay.classList.remove('open');
+        // Clear login error if it's the login modal
+        if (loginError) loginError.style.display = 'none';
+      });
+    }
+  });
+
+  // 2. Open Admin Login
+  loginTrigger.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (isAdminMode) {
+      // If already logged in, show logout confirmation
+      if (confirm("คุณต้องการออกจากระบบการจัดการบุคลากรใช่หรือไม่?")) {
+        logoutAdmin();
+      }
+    } else {
+      passwordInput.value = '';
+      loginError.style.display = 'none';
+      loginModal.classList.add('open');
+    }
+  });
+
+  // 3. Login Submit
+  loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const pass = passwordInput.value;
+    if (pass === 'admin') {
+      loginAdmin();
+      loginModal.classList.remove('open');
+    } else {
+      loginError.style.display = 'block';
+    }
+  });
+
+  // 4. Open Add Teacher Form
+  if (addTeacherBtn) {
+    addTeacherBtn.addEventListener('click', () => {
+      // Reset form
+      teacherForm.reset();
+      teacherIdInput.value = '';
+      photoPreview.style.display = 'none';
+      photoPlaceholder.style.display = 'block';
+      modalTitle.textContent = 'เพิ่มบุคลากรใหม่';
+      submitBtn.textContent = 'บันทึกข้อมูล';
+      teacherModal.classList.add('open');
+    });
+  }
+
+  // 5. Preview photo when selected
+  if (photoInput) {
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          photoPreview.src = e.target.result;
+          photoPreview.style.display = 'block';
+          photoPlaceholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // 6. Teacher Form Submit
+  if (teacherForm) {
+    teacherForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const id = teacherIdInput.value;
+      const name = teacherNameInput.value.trim();
+      const position = teacherPositionInput.value.trim();
+      const order_index = parseInt(teacherOrderInput.value, 10);
+      const photoFile = photoInput.files[0];
+
+      if (!name || !position || isNaN(order_index)) {
+        alert("กรุณากรอกข้อมูลที่จำเป็นให้ครบถ้วน");
+        return;
+      }
+
+      // Show saving loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'กำลังบันทึกข้อมูล...';
+
+      try {
+        let image_url = photoPreview.src && photoPreview.style.display === 'block' ? photoPreview.src : '';
+
+        // If a new photo file was uploaded and Supabase is configured
+        if (photoFile && supabase) {
+          try {
+            image_url = await uploadTeacherPhoto(photoFile);
+          } catch (uploadErr) {
+            console.error("Upload error:", uploadErr);
+            alert("ไม่สามารถอัปโหลดรูปภาพไปยัง Supabase Storage ได้ จะเซฟข้อมูลรูปภาพแบบโลคอล");
+          }
+        }
+
+        const payload = {
+          name,
+          position,
+          order_index,
+          image_url
+        };
+
+        if (supabase) {
+          if (id) {
+            // Update
+            const { error } = await supabase
+              .from('teachers')
+              .update(payload)
+              .eq('id', id);
+            if (error) throw error;
+          } else {
+            // Insert
+            const { error } = await supabase
+              .from('teachers')
+              .insert([payload]);
+            if (error) throw error;
+          }
+        } else {
+          // Offline mock updates
+          if (id) {
+            const idx = mockTeachers.findIndex(t => t.id === parseInt(id, 10));
+            if (idx !== -1) {
+              mockTeachers[idx] = { ...mockTeachers[idx], ...payload };
+            }
+          } else {
+            const newId = mockTeachers.length > 0 ? Math.max(...mockTeachers.map(t => t.id)) + 1 : 1;
+            mockTeachers.push({ id: newId, ...payload });
+          }
+        }
+
+        // Close modal and refresh list
+        teacherModal.classList.remove('open');
+        fetchAndRenderTeachers();
+      } catch (err) {
+        console.error("Error saving teacher:", err);
+        alert("เกิดข้อผิดพลาดในการบันทึกข้อมูล: " + err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'บันทึกข้อมูล';
+      }
+    });
+  }
+}
+
+// Function to upload photos to Supabase Storage
+async function uploadTeacherPhoto(file) {
+  if (!supabase) return '';
+  
+  const fileExt = file.name.split('.').pop();
+  // Safe filename
+  const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`;
+  const filePath = `avatars/${fileName}`;
+
+  const { data, error } = await supabase.storage
+    .from('teachers')
+    .upload(filePath, file);
+
+  if (error) throw error;
+
+  const { data: publicUrlData } = supabase.storage
+    .from('teachers')
+    .getPublicUrl(filePath);
+
+  return publicUrlData.publicUrl;
+}
+
+// Helper to enter Admin Mode
+function loginAdmin() {
+  isAdminMode = true;
+  document.body.classList.add('admin-mode-active');
+  
+  // Show Add button container
+  const addBtnContainer = document.getElementById('admin-add-btn-container');
+  if (addBtnContainer) addBtnContainer.style.display = 'block';
+
+  // Add the green floating badge indicator
+  let badge = document.getElementById('admin-badge-indicator');
+  if (!badge) {
+    badge = document.createElement('div');
+    badge.id = 'admin-badge-indicator';
+    badge.className = 'admin-badge-indicator';
+    badge.innerHTML = `
+      <i class="fa-solid fa-unlock-keyhole"></i> 
+      <span>ระบบจัดการครู (Active)</span>
+      <button class="btn-logout" id="admin-logout-btn">ออกจากระบบ</button>
+    `;
+    document.body.appendChild(badge);
+    
+    // Setup logout click
+    document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+  } else {
+    badge.style.display = 'flex';
+  }
+
+  // Refresh view to display card actions
+  fetchAndRenderTeachers();
+}
+
+// Helper to logout Admin Mode
+function logoutAdmin() {
+  isAdminMode = false;
+  document.body.classList.remove('admin-mode-active');
+  
+  const addBtnContainer = document.getElementById('admin-add-btn-container');
+  if (addBtnContainer) addBtnContainer.style.display = 'none';
+
+  const badge = document.getElementById('admin-badge-indicator');
+  if (badge) badge.style.display = 'none';
+
+  // Refresh view to hide actions
+  fetchAndRenderTeachers();
+}
+
+// Bind clicks to Card actions (Edit/Delete)
+function setupTeacherCardActions() {
+  if (!isAdminMode) return;
+
+  // Edit Actions
+  document.querySelectorAll('.btn-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const teacher = allTeachers.find(t => t.id == id);
+      if (teacher) {
+        // Open form in edit mode
+        const teacherModal = document.getElementById('teacher-form-modal');
+        const teacherIdInput = document.getElementById('teacher-id');
+        const teacherNameInput = document.getElementById('teacher-name');
+        const teacherPositionInput = document.getElementById('teacher-position');
+        const teacherOrderInput = document.getElementById('teacher-order');
+        const photoPreview = document.getElementById('teacher-photo-preview');
+        const photoPlaceholder = document.getElementById('teacher-photo-placeholder');
+        const modalTitle = document.getElementById('teacher-modal-title');
+        const submitBtn = document.getElementById('teacher-form-submit-btn');
+
+        teacherIdInput.value = teacher.id;
+        teacherNameInput.value = teacher.name;
+        teacherPositionInput.value = teacher.position;
+        teacherOrderInput.value = teacher.order_index;
+
+        if (teacher.image_url) {
+          photoPreview.src = teacher.image_url;
+          photoPreview.style.display = 'block';
+          photoPlaceholder.style.display = 'none';
+        } else {
+          photoPreview.style.display = 'none';
+          photoPlaceholder.style.display = 'block';
+        }
+
+        modalTitle.textContent = 'แก้ไขข้อมูลบุคลากร';
+        submitBtn.textContent = 'อัปเดตข้อมูล';
+        teacherModal.classList.add('open');
+      }
+    });
+  });
+
+  // Delete Actions
+  document.querySelectorAll('.btn-delete').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const id = btn.getAttribute('data-id');
+      const teacher = allTeachers.find(t => t.id == id);
+      if (teacher) {
+        if (confirm(`คุณต้องการลบรายชื่อคุณครู "${teacher.name}" ออกจากทำเนียบจริงหรือไม่?`)) {
+          try {
+            if (supabase) {
+              const { error } = await supabase
+                .from('teachers')
+                .delete()
+                .eq('id', id);
+              if (error) throw error;
+            } else {
+              // Mock Delete
+              const idx = mockTeachers.findIndex(t => t.id == id);
+              if (idx !== -1) mockTeachers.splice(idx, 1);
+            }
+            fetchAndRenderTeachers();
+          } catch (err) {
+            console.error("Error deleting teacher:", err);
+            alert("เกิดข้อผิดพลาดในการลบข้อมูล: " + err.message);
+          }
+        }
+      }
+    });
   });
 }

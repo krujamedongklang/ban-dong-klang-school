@@ -39,6 +39,7 @@
         <ul>
           <li><a href="#hero" class="nav-link active">หน้าแรก</a></li>
           <li><a href="#about" class="nav-link">ข้อมูลโรงเรียน</a></li>
+          <li><a href="#teachers" class="nav-link">ทำเนียบบุคลากร</a></li>
           <li><a href="#administration" class="nav-link">ฝ่ายบริหารงาน</a></li>
           <li><a href="#resources" class="nav-link">คลังสื่อการเรียนรู้</a></li>
           <li><a href="#news" class="nav-link">ข่าวสารกิจกรรม</a></li>
@@ -69,6 +70,7 @@
       <ul>
         <li><a href="#hero" class="drawer-link">หน้าแรก</a></li>
         <li><a href="#about" class="drawer-link">ข้อมูลโรงเรียน</a></li>
+        <li><a href="#teachers" class="drawer-link">ทำเนียบบุคลากร</a></li>
         <li><a href="#administration" class="drawer-link">ฝ่ายบริหารงาน</a></li>
         <li><a href="#resources" class="drawer-link">คลังสื่อการเรียนรู้</a></li>
         <li><a href="#news" class="drawer-link">ข่าวสารกิจกรรม</a></li>
@@ -167,6 +169,48 @@
         </div>
         
       </div>
+    </div>
+  </section>
+
+  <!-- Staff Directory Section -->
+  <section id="teachers" class="teachers-section py-20">
+    <div class="container">
+      
+      <div class="section-title-area text-center">
+        <span class="sub-title">OUR TEAM</span>
+        <h2 class="section-title">ทำเนียบบุคลากร</h2>
+        <div class="title-bar center"></div>
+      </div>
+
+      <!-- Add New Teacher Button (Only visible in Admin Edit Mode) -->
+      <div id="admin-add-btn-container" class="admin-only text-center mb-10" style="display: none; text-align: center; margin-bottom: 30px;">
+        <button id="add-teacher-btn" class="btn btn-primary">
+          <i class="fa-solid fa-user-plus"></i> เพิ่มบุคลากรใหม่
+        </button>
+      </div>
+
+      <!-- Loading / Skeleton state -->
+      <div id="teachers-loading" class="text-center py-10" style="text-align: center; padding: 40px 0;">
+        <div class="skeleton-spinner" style="border: 4px solid rgba(168, 30, 46, 0.1); border-left-color: var(--primary-red); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+        <p class="mt-4 text-gray-500" style="margin-top: 15px; color: var(--gray-500);">กำลังโหลดข้อมูลบุคลากร...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div id="teachers-empty" class="text-center py-10" style="display: none; text-align: center; padding: 40px 0;">
+        <i class="fa-solid fa-users text-gray-300" style="font-size: 3rem; color: var(--gray-300);"></i>
+        <p class="mt-4 text-gray-500" style="margin-top: 15px; color: var(--gray-500);">ยังไม่มีข้อมูลบุคลากรในระบบ</p>
+      </div>
+
+      <!-- Director Display Row (Top Row) -->
+      <div id="director-row" class="director-display-row">
+        <!-- Dynamically rendered Director Card -->
+      </div>
+
+      <!-- Teachers Grid Row (Bottom Row) -->
+      <div id="teachers-grid" class="teachers-grid-row">
+        <!-- Dynamically rendered Teacher Cards -->
+      </div>
+
     </div>
   </section>
 
@@ -414,6 +458,7 @@
         <ul>
           <li><a href="#hero">หน้าแรก</a></li>
           <li><a href="#about">ข้อมูลทั่วไป</a></li>
+          <li><a href="#teachers">ทำเนียบบุคลากร</a></li>
           <li><a href="#administration">ฝ่ายบริหารงาน</a></li>
           <li><a href="#resources">คลังสื่อการเรียนรู้</a></li>
           <li><a href="#news">ข่าวสารกิจกรรม</a></li>
@@ -430,7 +475,7 @@
     </div>
     <div class="footer-bottom">
       <p>&copy; 2026 โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑). All Rights Reserved.</p>
-      <p class="design-credit">Designed with <i class="fa-solid fa-heart"></i> for educational excellence</p>
+      <p class="design-credit">Designed with <i class="fa-solid fa-heart"></i> for educational excellence | <a href="#" id="admin-login-trigger" style="color: inherit; text-decoration: none;"><i class="fa-solid fa-lock"></i> จัดการระบบ</a></p>
     </div>
   </footer>
 
@@ -470,6 +515,77 @@
             <!-- News details -->
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="admin-login-modal">
+    <div class="modal-card" style="max-width: 400px;">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-header-accent"></div>
+      <div class="modal-body-content" style="padding: 30px 20px;">
+        <div class="text-center mb-6" style="text-align: center; margin-bottom: 24px;">
+          <i class="fa-solid fa-lock" style="font-size: 2.5rem; color: var(--primary-red);"></i>
+          <h3 class="mt-4" style="font-size: 1.5rem; color: var(--dark-color); margin-top: 15px; margin-bottom: 5px;">เข้าสู่ระบบจัดการข้อมูล</h3>
+          <p class="text-gray-500" style="font-size: 0.9rem; color: var(--gray-500); margin: 0;">สำหรับผู้ดูแลเว็บไซต์โรงเรียนบ้านดงกลาง</p>
+        </div>
+        <form id="admin-login-form">
+          <div class="form-group mb-6" style="margin-bottom: 24px;">
+            <label for="admin-password" style="font-weight: 500; display: block; margin-bottom: 8px;"><i class="fa-solid fa-key"></i> รหัสผ่านผู้ดูแลระบบ</label>
+            <input type="password" id="admin-password" required placeholder="กรอกรหัสผ่านเพื่อเข้าใช้งาน" style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; box-sizing: border-box;">
+            <span id="login-error-msg" class="text-red" style="font-size: 0.85rem; display: none; margin-top: 5px; color: var(--primary-red);"><i class="fa-solid fa-circle-exclamation"></i> รหัสผ่านไม่ถูกต้อง!</span>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">ยืนยันความปลอดภัย</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Teacher Form Modal -->
+  <div class="modal-overlay" id="teacher-form-modal">
+    <div class="modal-card" style="max-width: 500px;">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-header-accent"></div>
+      <div class="modal-body-content" style="padding: 35px 25px; box-sizing: border-box;">
+        <h3 class="modal-title-text" id="teacher-modal-title" style="font-size: 1.5rem; margin-bottom: 5px; color: var(--dark-color);">เพิ่มบุคลากรใหม่</h3>
+        <p class="modal-subtitle-text" style="color: var(--gray-500); margin-top: 0; margin-bottom: 15px;">กรอกรายละเอียดข้อมูลและรูปถ่ายคุณครู</p>
+        <div class="modal-divider" style="height: 1px; background-color: var(--gray-200); margin-bottom: 20px;"></div>
+        
+        <form id="teacher-form">
+          <input type="hidden" id="teacher-id">
+          
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="teacher-name" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-user"></i> ชื่อ-นามสกุล <span class="required" style="color: var(--primary-red);">*</span></label>
+            <input type="text" id="teacher-name" required placeholder="เช่น นางสาวใจดี เรียนเก่ง" style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box;">
+          </div>
+
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="teacher-position" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-id-card"></i> ตำแหน่ง / วิทยฐานะ <span class="required" style="color: var(--primary-red);">*</span></label>
+            <input type="text" id="teacher-position" required placeholder="เช่น ผู้อำนวยการโรงเรียน, ครูผู้ช่วย, ครูชำนาญการพิเศษ" style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box;">
+          </div>
+
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="teacher-order" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-arrow-down-1-9"></i> ลำดับการแสดงผล <span class="required" style="color: var(--primary-red);">*</span></label>
+            <input type="number" id="teacher-order" required value="10" min="1" placeholder="ตัวเลขน้อยจะอยู่บนสุด (ผอ. ควรตั้งเป็น 1)" style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box;">
+            <small style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 3px;">ผู้อำนวยการใส่เป็น 1 (จะอยู่บนสุดกึ่งกลางคนเดียว), คุณครูใส่เป็นลำดับถัดๆ ไป (เช่น 2, 3, 4)</small>
+          </div>
+
+          <div class="form-group mb-6" style="margin-bottom: 24px;">
+            <label for="teacher-photo-input" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-image"></i> รูปถ่ายคุณครู</label>
+            <!-- Show current photo preview -->
+            <div class="text-center mb-3" style="text-align: center; margin-bottom: 12px;">
+              <div style="width: 120px; height: 120px; border-radius: 50%; overflow: hidden; margin: 0 auto; border: 3px solid rgba(168, 30, 46, 0.1); background-color: var(--gray-100); display: flex; align-items: center; justify-content: center;">
+                <img id="teacher-photo-preview" src="" alt="ตัวอย่างรูปถ่าย" style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                <i id="teacher-photo-placeholder" class="fa-solid fa-user-tie" style="font-size: 3rem; color: var(--gray-400);"></i>
+              </div>
+            </div>
+            <input type="file" id="teacher-photo-input" accept="image/*" style="width: 100%; padding: 8px 0; box-sizing: border-box;">
+            <small style="color: var(--gray-500); font-size: 0.8rem; display: block; margin-top: 3px;">หากไม่ได้อัปโหลดรูปภาพ ระบบจะเลือกใช้รูปโปรไฟล์จำลอง (Placeholder) ให้อัตโนมัติ</small>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="teacher-form-submit-btn" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">บันทึกข้อมูล</button>
+        </form>
       </div>
     </div>
   </div>
