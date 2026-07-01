@@ -559,6 +559,14 @@ ul {
   margin-bottom: 30px;
   text-align: center;
   text-indent: 0;
+  
+  /* Elegant Frame Card */
+  padding: 25px;
+  background: linear-gradient(135deg, rgba(168, 30, 46, 0.03) 0%, rgba(255, 183, 3, 0.02) 100%);
+  border: 1.5px solid rgba(168, 30, 46, 0.12);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(168, 30, 46, 0.02);
+  line-height: 1.8;
 }
 
 .vision-mission-cards {
