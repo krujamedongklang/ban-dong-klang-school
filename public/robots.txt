@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bandongklangschool.onrender.com/sitemap.xml
