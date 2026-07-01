@@ -338,35 +338,49 @@
               <i class="fa-solid fa-file-circle-plus"></i> เขียนข่าวสารใหม่
             </button>
           </div>
-          <div class="news-filter">
-            <button class="filter-btn active" data-filter="all">ข่าวทั้งหมด</button>
-            <button class="filter-btn" data-filter="activity">กิจกรรมโรงเรียน</button>
-            <button class="filter-btn" data-filter="academic">ข่าวด้านวิชาการ</button>
+          <div class="news-filter-wrapper" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <div class="news-filter">
+              <button class="filter-btn active" data-filter="all">ข่าวทั้งหมด</button>
+              <button class="filter-btn" data-filter="activity">กิจกรรมโรงเรียน</button>
+              <button class="filter-btn" data-filter="academic">ข่าวด้านวิชาการ</button>
+            </div>
+            <!-- News Slider Controls -->
+            <div class="news-slider-controls" style="display: flex; gap: 8px;">
+              <button id="news-slide-prev" class="slider-control-btn" title="ข่าวสารก่อนหน้า" aria-label="ข่าวสารก่อนหน้า" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gray-300); background-color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary-red); transition: all 0.3s ease;">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <button id="news-slide-next" class="slider-control-btn" title="ข่าวสารถัดไป" aria-label="ข่าวสารถัดไป" style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--gray-300); background-color: var(--white); cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--primary-red); transition: all 0.3s ease;">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- News Grid / Dynamic Container -->
-      <div class="news-grid" id="news-container">
-        <!-- Loading State Placeholder -->
-        <div class="news-loading-skeleton">
-          <div class="skeleton-card">
-            <div class="skeleton-image"></div>
-            <div class="skeleton-text line-1"></div>
-            <div class="skeleton-text line-2"></div>
-            <div class="skeleton-text line-3"></div>
-          </div>
-          <div class="skeleton-card">
-            <div class="skeleton-image"></div>
-            <div class="skeleton-text line-1"></div>
-            <div class="skeleton-text line-2"></div>
-            <div class="skeleton-text line-3"></div>
-          </div>
-          <div class="skeleton-card">
-            <div class="skeleton-image"></div>
-            <div class="skeleton-text line-1"></div>
-            <div class="skeleton-text line-2"></div>
-            <div class="skeleton-text line-3"></div>
+      <!-- News Slider Wrapper -->
+      <div class="news-slider-wrapper" style="overflow: hidden; width: 100%; position: relative;">
+        <!-- News Slider Track / Dynamic Container -->
+        <div class="news-slider-track" id="news-container">
+          <!-- Loading State Placeholder -->
+          <div class="news-loading-skeleton" style="display: flex; gap: 30px; width: 100%;">
+            <div class="skeleton-card" style="flex-shrink: 0; width: calc((100% - 60px) / 3);">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-text line-1"></div>
+              <div class="skeleton-text line-2"></div>
+              <div class="skeleton-text line-3"></div>
+            </div>
+            <div class="skeleton-card" style="flex-shrink: 0; width: calc((100% - 60px) / 3);">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-text line-1"></div>
+              <div class="skeleton-text line-2"></div>
+              <div class="skeleton-text line-3"></div>
+            </div>
+            <div class="skeleton-card" style="flex-shrink: 0; width: calc((100% - 60px) / 3);">
+              <div class="skeleton-image"></div>
+              <div class="skeleton-text line-1"></div>
+              <div class="skeleton-text line-2"></div>
+              <div class="skeleton-text line-3"></div>
+            </div>
           </div>
         </div>
       </div>

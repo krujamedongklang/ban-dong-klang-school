@@ -312,6 +312,7 @@ function setupDepartmentModals() {
 // 5. News Fetch & Render (Supabase or Mock Fallback)
 // ==========================================================================
 let allNewsData = [];
+let currentNewsSlideIndex = 0;
 
 async function fetchAndRenderNews() {
   const container = document.getElementById('news-container');
@@ -343,6 +344,9 @@ async function fetchAndRenderNews() {
   // Render news cards
   renderNews(allNewsData);
 
+  // Initialize slider navigation events
+  setupNewsSliderEvents();
+
   // Setup news category filter buttons
   filterButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -365,11 +369,18 @@ function renderNews(newsItems) {
   
   if (newsItems.length === 0) {
     container.innerHTML = `
-      <div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray-600);">
+      <div style="text-align: center; padding: 40px; color: var(--gray-600); width: 100%; flex-shrink: 0;">
         <i class="fa-solid fa-folder-open" style="font-size: 3rem; color: var(--gray-300); margin-bottom: 15px;"></i>
         <p>ไม่พบข่าวสารในหมวดหมู่นี้</p>
       </div>
     `;
+    
+    // Hide slide controls if no news items
+    const prevBtn = document.getElementById('news-slide-prev');
+    const nextBtn = document.getElementById('news-slide-next');
+    if (prevBtn) prevBtn.disabled = true;
+    if (nextBtn) nextBtn.disabled = true;
+    container.style.transform = 'translateX(0)';
     return;
   }
 
@@ -422,6 +433,12 @@ function renderNews(newsItems) {
       if (newsItem) openNewsModal(newsItem);
     });
   });
+
+  // Reset index to start of new filtered/updated list
+  currentNewsSlideIndex = 0;
+
+  // Update slider layout positioning
+  updateNewsSlider();
 
   // Setup event listeners for edit and delete news buttons
   setupNewsCardActions();
@@ -1401,5 +1418,100 @@ function setupLightbox() {
   closeBtn.addEventListener('click', (e) => {
     e.stopPropagation();
     closeLightbox();
+  });
+}
+
+function getVisibleNewsCardsCount() {
+  const width = window.innerWidth;
+  if (width > 1024) return 3;
+  if (width > 576) return 2;
+  return 1;
+}
+
+function updateNewsSlider() {
+  const track = document.getElementById('news-container');
+  const prevBtn = document.getElementById('news-slide-prev');
+  const nextBtn = document.getElementById('news-slide-next');
+
+  if (!track || !prevBtn || !nextBtn) return;
+
+  const cards = track.querySelectorAll('.news-card');
+  const visibleCount = getVisibleNewsCardsCount();
+
+  // Reset slider index if bounds exceeded
+  if (currentNewsSlideIndex > cards.length - visibleCount) {
+    currentNewsSlideIndex = Math.max(0, cards.length - visibleCount);
+  }
+
+  // Calculate slide offset based on offsetWidth of first card
+  const firstCard = cards[0];
+  if (firstCard) {
+    const cardWidth = firstCard.offsetWidth;
+    const gap = 30; // matches CSS gap
+    const offset = currentNewsSlideIndex * (cardWidth + gap);
+    track.style.transform = `translateX(-${offset}px)`;
+  } else {
+    track.style.transform = 'translateX(0)';
+  }
+
+  // Update navigation button disabled states
+  prevBtn.disabled = currentNewsSlideIndex === 0;
+  nextBtn.disabled = cards.length <= visibleCount || currentNewsSlideIndex >= cards.length - visibleCount;
+}
+
+function setupNewsSliderEvents() {
+  const prevBtn = document.getElementById('news-slide-prev');
+  const nextBtn = document.getElementById('news-slide-next');
+
+  if (!prevBtn || !nextBtn) return;
+
+  // Click arrow controls
+  prevBtn.addEventListener('click', () => {
+    if (currentNewsSlideIndex > 0) {
+      currentNewsSlideIndex--;
+      updateNewsSlider();
+    }
+  });
+
+  nextBtn.addEventListener('click', () => {
+    const track = document.getElementById('news-container');
+    const cards = track ? track.querySelectorAll('.news-card') : [];
+    const visibleCount = getVisibleNewsCardsCount();
+    if (currentNewsSlideIndex < cards.length - visibleCount) {
+      currentNewsSlideIndex++;
+      updateNewsSlider();
+    }
+  });
+
+  // Handle touch swipe for mobile touch gestures
+  let touchStartX = 0;
+  let touchEndX = 0;
+  const wrapper = document.querySelector('.news-slider-wrapper');
+  if (wrapper) {
+    wrapper.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    wrapper.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }, { passive: true });
+  }
+
+  function handleSwipe() {
+    const swipeThreshold = 50;
+    if (touchStartX - touchEndX > swipeThreshold) {
+      // Swipe left -> Next
+      nextBtn.click();
+    } else if (touchEndX - touchStartX > swipeThreshold) {
+      // Swipe right -> Prev
+      prevBtn.click();
+    }
+  }
+
+  // Handle window resize to recalculate slide offsets and prevent layout breaks
+  window.addEventListener('resize', () => {
+    currentNewsSlideIndex = 0;
+    updateNewsSlider();
   });
 }

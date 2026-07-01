@@ -841,10 +841,23 @@ ul {
   box-shadow: 0 4px 10px rgba(168, 30, 46, 0.2);
 }
 
-.news-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+.news-slider-track {
+  display: flex;
   gap: 30px;
+  transition: transform 0.4s ease-in-out;
+  width: 100%;
+}
+
+.news-loading-skeleton {
+  display: flex;
+  gap: 30px;
+  width: 100%;
+}
+
+.skeleton-card {
+  flex-shrink: 0;
+  width: calc((100% - 60px) / 3);
+  box-sizing: border-box;
 }
 
 /* News Cards */
@@ -858,6 +871,9 @@ ul {
   flex-direction: column;
   transition: var(--transition-smooth);
   height: 100%;
+  flex-shrink: 0;
+  width: calc((100% - 60px) / 3); /* Desktop: 3 cards */
+  box-sizing: border-box;
 }
 
 .news-card:hover {
@@ -1443,12 +1459,12 @@ ul {
     gap: 20px;
   }
   
-  .news-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .news-card {
+    width: calc((100% - 30px) / 2);
   }
   
-  .news-loading-skeleton {
-    grid-template-columns: repeat(2, 1fr);
+  .skeleton-card {
+    width: calc((100% - 30px) / 2);
   }
   
   .hero-title {
@@ -1534,12 +1550,12 @@ ul {
     grid-template-columns: 1fr;
   }
   
-  .news-grid {
-    grid-template-columns: 1fr;
+  .news-card {
+    width: 100%;
   }
   
-  .news-loading-skeleton {
-    grid-template-columns: 1fr;
+  .skeleton-card {
+    width: 100%;
   }
   
   .hero-title {
@@ -1950,4 +1966,24 @@ body.admin-mode-active .news-card .news-card-actions {
   border-color: var(--primary-red) !important;
   background-color: rgba(168, 30, 46, 0.05) !important;
   transform: scale(1.02);
+}
+
+/* News Slider Controls */
+.slider-control-btn {
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s ease !important;
+}
+
+.slider-control-btn:hover:not(:disabled) {
+  background-color: var(--primary-red) !important;
+  color: var(--white) !important;
+  border-color: var(--primary-red) !important;
+}
+
+.slider-control-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  color: var(--gray-400) !important;
+  background-color: var(--gray-100) !important;
+  border-color: var(--gray-200) !important;
 }
