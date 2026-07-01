@@ -887,7 +887,8 @@ ul {
 .news-card-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #f1f3f5; /* Clean light gray background */
   transition: var(--transition-smooth);
 }
 
@@ -1389,7 +1390,8 @@ ul {
 .news-modal-image-wrapper img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #f1f3f5; /* Clean light gray background */
 }
 
 .news-modal-info {
