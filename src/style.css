@@ -1696,3 +1696,34 @@ ul {
     justify-content: center;
   }
 }
+
+/* Modal PDF Link Item Styles */
+.modal-list-item.pdf-link-item {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  transition: all 0.2s ease;
+  padding: 12px 15px;
+  border-radius: 8px;
+  background-color: rgba(168, 30, 46, 0.03); /* Subtle primary red tint */
+  border: 1px dashed rgba(168, 30, 46, 0.15);
+  margin-top: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-list-item.pdf-link-item i {
+  color: var(--primary-red) !important;
+  font-size: 1.3rem;
+  margin-top: 2px;
+}
+
+.modal-list-item.pdf-link-item:hover {
+  background-color: rgba(168, 30, 46, 0.08);
+  border-color: var(--primary-red);
+}
+
+.modal-list-item.pdf-link-item:hover h4 {
+  color: var(--primary-red);
+  text-decoration: underline;
+}
