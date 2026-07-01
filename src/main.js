@@ -135,6 +135,25 @@ function setupNavigation() {
   const sections = document.querySelectorAll('section');
   const navLinks = document.querySelectorAll('.nav-link');
 
+  // Smooth scroll without changing hash in URL
+  navLinks.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const targetId = link.getAttribute('href');
+      
+      // Only handle internal anchor links
+      if (targetId && targetId.startsWith('#')) {
+        e.preventDefault();
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+          window.scrollTo({
+            top: targetSection.offsetTop - 120, // offset for fixed header
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  });
+
   window.addEventListener('scroll', () => {
     // Scroll header background change
     if (window.scrollY > 50) {
@@ -146,7 +165,7 @@ function setupNavigation() {
     // Active Section Tracking
     let currentSectionId = '';
     sections.forEach(section => {
-      const sectionTop = section.offsetTop - 120; // offset for fixed header
+      const sectionTop = section.offsetTop - 130; // offset for fixed header + padding buffer
       const sectionHeight = section.clientHeight;
       if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
         currentSectionId = section.getAttribute('id');
@@ -189,16 +208,24 @@ function setupMobileDrawer() {
   overlay.addEventListener('click', closeDrawer);
 
   drawerLinks.forEach(link => {
-    link.addEventListener('click', () => {
-      closeDrawer();
-      // Wait a moment for smooth scroll
+    link.addEventListener('click', (e) => {
       const targetId = link.getAttribute('href');
-      const targetSection = document.querySelector(targetId);
-      if (targetSection) {
-        window.scrollTo({
-          top: targetSection.offsetTop - 80,
-          behavior: 'smooth'
-        });
+      
+      if (targetId && targetId.startsWith('#')) {
+        e.preventDefault();
+        closeDrawer();
+        const targetSection = document.querySelector(targetId);
+        if (targetSection) {
+          // Wait a moment for drawer closing animation to start
+          setTimeout(() => {
+            window.scrollTo({
+              top: targetSection.offsetTop - 80,
+              behavior: 'smooth'
+            });
+          }, 150);
+        }
+      } else {
+        closeDrawer();
       }
     });
   });
