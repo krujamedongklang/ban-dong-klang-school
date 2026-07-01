@@ -1540,3 +1540,158 @@ ul {
     height: 200px;
   }
 }
+
+/* ==========================================================================
+   Learning Resources Banner Section (Option 3: Pre-Footer Banner)
+   ========================================================================== */
+.edu-banner-section {
+  background-color: var(--white);
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.edu-banner-card {
+  background: linear-gradient(135deg, var(--primary-red) 0%, var(--primary-red-hover) 100%);
+  border: 2px solid var(--secondary-yellow);
+  border-radius: 24px;
+  padding: 50px 60px;
+  box-shadow: 0 20px 45px rgba(168, 30, 46, 0.18);
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.edu-banner-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 25px 50px rgba(168, 30, 46, 0.25);
+}
+
+/* Decorative background shapes inside card */
+.edu-banner-card::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 183, 3, 0.15) 0%, rgba(255, 183, 3, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.edu-banner-card::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 70%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.edu-banner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+.edu-banner-icon-wrapper {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px dashed rgba(255, 183, 3, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.2rem;
+  color: var(--secondary-yellow);
+  flex-shrink: 0;
+  animation: float 6s ease-in-out infinite;
+}
+
+.edu-banner-text {
+  flex: 1;
+}
+
+.edu-badge {
+  display: inline-block;
+  background-color: rgba(255, 183, 3, 0.15);
+  color: var(--secondary-yellow);
+  font-family: var(--font-prompt);
+  font-weight: 600;
+  font-size: 0.8rem;
+  padding: 4px 14px;
+  border-radius: 50px;
+  margin-bottom: 12px;
+  letter-spacing: 1px;
+}
+
+.edu-title {
+  font-family: var(--font-prompt);
+  font-size: 1.85rem;
+  font-weight: 600;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.edu-description {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 1.05rem;
+  line-height: 1.6;
+}
+
+.btn-edu-cta {
+  background: linear-gradient(135deg, var(--secondary-yellow-light) 0%, var(--secondary-yellow) 100%);
+  color: var(--primary-red-hover) !important;
+  font-weight: 600;
+  padding: 14px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(255, 183, 3, 0.25);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  transition: var(--transition-smooth);
+}
+
+.btn-edu-cta:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px rgba(255, 183, 3, 0.4);
+  background: linear-gradient(135deg, var(--white) 0%, var(--secondary-yellow-light) 100%);
+}
+
+.btn-edu-cta i {
+  font-size: 0.9rem;
+}
+
+/* Responsive design for resources banner */
+@media (max-width: 992px) {
+  .edu-banner-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+  }
+  
+  .edu-banner-card {
+    padding: 40px 30px;
+  }
+  
+  .edu-banner-icon-wrapper {
+    margin: 0 auto;
+  }
+  
+  .btn-edu-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
