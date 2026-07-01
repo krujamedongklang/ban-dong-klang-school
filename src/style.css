@@ -554,10 +554,10 @@ ul {
 }
 
 .about-desc {
-  font-size: 1.1rem;
+  font-size: 1.02rem;
   color: var(--gray-800);
   margin-bottom: 30px;
-  text-indent: 2em;
+  text-indent: 1.5em;
 }
 
 .vision-mission-cards {
