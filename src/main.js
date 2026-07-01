@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupContactForm();
   fetchAndRenderTeachers();
   setupAdminDashboard();
+  setupLightbox();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -440,6 +441,8 @@ function openNewsModal(item) {
   if (item.image_url) {
     imgElement.style.display = 'block';
     imgElement.src = item.image_url;
+    imgElement.style.cursor = 'zoom-in';
+    imgElement.title = 'คลิกเพื่อดูรูปภาพขนาดเต็ม';
   } else {
     // If no image, hide the image wrapper or show a header accent instead
     imgElement.style.display = 'none';
@@ -1364,4 +1367,39 @@ async function uploadNewsPhoto(file) {
     .getPublicUrl(filePath);
 
   return publicUrlData.publicUrl;
+}
+
+function setupLightbox() {
+  const lightbox = document.getElementById('image-lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const closeBtn = lightbox.querySelector('.lightbox-close');
+  const newsModalImg = document.getElementById('news-modal-img');
+
+  if (!lightbox || !lightboxImg || !newsModalImg) return;
+
+  // Click news detail modal image to open fullscreen lightbox
+  newsModalImg.addEventListener('click', () => {
+    lightboxImg.src = newsModalImg.src;
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // prevent scrolling behind lightbox
+  });
+
+  // Close lightbox helper
+  function closeLightbox() {
+    lightbox.style.display = 'none';
+    lightboxImg.src = '';
+    
+    // Restore modal scrolling only if news-modal is not open, otherwise keep it hidden
+    const newsModal = document.getElementById('news-modal');
+    if (!newsModal || !newsModal.classList.contains('open')) {
+      document.body.style.overflow = '';
+    }
+  }
+
+  // Click overlay or close button to close
+  lightbox.addEventListener('click', closeLightbox);
+  closeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    closeLightbox();
+  });
 }
