@@ -1968,7 +1968,14 @@ body.admin-mode-active .news-card .news-card-actions {
   transform: scale(1.02);
 }
 
-/* News Slider Controls (Option 2: Floating Side Arrows) */
+/* News Slider Outer (Container with space for side arrows) */
+.news-slider-outer {
+  position: relative;
+  width: 100%;
+  padding: 0 60px; /* Space for side arrows on desktop */
+  box-sizing: border-box;
+}
+
 .slider-side-btn {
   position: absolute;
   top: 50%;
@@ -1990,11 +1997,11 @@ body.admin-mode-active .news-card .news-card-actions {
 }
 
 .slider-side-btn.prev {
-  left: -24px;
+  left: 6px; /* Centered inside 60px gutter */
 }
 
 .slider-side-btn.next {
-  right: -24px;
+  right: 6px; /* Centered inside 60px gutter */
 }
 
 .slider-side-btn:hover:not(:disabled) {
@@ -2011,16 +2018,25 @@ body.admin-mode-active .news-card .news-card-actions {
   pointer-events: none;
 }
 
-/* On mobile/tablet, shift side buttons slightly inside to prevent offscreen clipping */
-@media (max-width: 1200px) {
-  .slider-side-btn.prev {
-    left: 10px;
+/* Responsive adjustment for tablets and mobile screens to prevent text clipping */
+@media (max-width: 768px) {
+  .news-slider-outer {
+    padding: 0 42px; /* Smaller gutter on mobile/tablet */
+  }
+  
+  .slider-side-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(4px);
   }
+  
+  .slider-side-btn.prev {
+    left: 3px; /* Centered inside 42px gutter */
+  }
+  
   .slider-side-btn.next {
-    right: 10px;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(4px);
+    right: 3px; /* Centered inside 42px gutter */
   }
 }
