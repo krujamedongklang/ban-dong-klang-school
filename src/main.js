@@ -126,6 +126,11 @@ const adminDeptsData = {
 // 3. Document Ready Setup & Core UI Functions
 // ==========================================================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Clean hash from URL bar on page load if it's just '#'
+  if (window.location.hash === '#' || window.location.hash === '') {
+    window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+  }
+
   setupNavigation();
   setupMobileDrawer();
   setupDepartmentModals();
@@ -143,6 +148,20 @@ function setupNavigation() {
   const header = document.querySelector('.main-header');
   const sections = document.querySelectorAll('section');
   const navLinks = document.querySelectorAll('.nav-link');
+  const logoLink = document.querySelector('.logo-area');
+
+  // Handle Logo Area click (scroll to top smoothly and clean URL hash)
+  if (logoLink) {
+    logoLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      // Clean hash from URL bar
+      window.history.replaceState('', document.title, window.location.pathname + window.location.search);
+    });
+  }
 
   // Smooth scroll without changing hash in URL
   navLinks.forEach(link => {
