@@ -1680,13 +1680,27 @@ ul {
   pointer-events: none;
 }
 
-.edu-banner-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.edu-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
   gap: 40px;
+  align-items: center;
   position: relative;
-  z-index: 1;
+  z-index: 2;
+}
+
+.edu-banner-info {
+  display: flex;
+  gap: 22px;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.edu-banner-action-column {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
 }
 
 .edu-banner-icon-wrapper {
@@ -1762,10 +1776,16 @@ ul {
 
 /* Responsive design for resources banner */
 @media (max-width: 992px) {
-  .edu-banner-content {
-    flex-direction: column;
-    text-align: center;
+  .edu-grid {
+    grid-template-columns: 1fr;
     gap: 30px;
+  }
+  
+  .edu-banner-info {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 15px;
   }
   
   .edu-banner-card {
