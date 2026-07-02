@@ -142,6 +142,8 @@ document.addEventListener('DOMContentLoaded', () => {
   setupStudentStatsToggle();
   setupMobileDropdown();
   setupPDPABanner();
+  fetchAndRenderCalendar();
+  setupCalendarAdmin();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -1004,6 +1006,9 @@ function loginAdmin() {
   const addNewsBtnContainer = document.getElementById('admin-news-btn-container');
   if (addNewsBtnContainer) addNewsBtnContainer.style.display = 'block';
 
+  const addCalendarBtnContainer = document.getElementById('admin-calendar-btn-container');
+  if (addCalendarBtnContainer) addCalendarBtnContainer.style.display = 'block';
+
   // Add the green floating badge indicator
   let badge = document.getElementById('admin-badge-indicator');
   if (!badge) {
@@ -1026,6 +1031,7 @@ function loginAdmin() {
   // Refresh views to display card actions
   fetchAndRenderTeachers();
   renderNews(allNewsData);
+  fetchAndRenderCalendar();
 }
 
 // Helper to logout Admin Mode
@@ -1046,12 +1052,16 @@ async function logoutAdmin() {
   const addNewsBtnContainer = document.getElementById('admin-news-btn-container');
   if (addNewsBtnContainer) addNewsBtnContainer.style.display = 'none';
 
+  const addCalendarBtnContainer = document.getElementById('admin-calendar-btn-container');
+  if (addCalendarBtnContainer) addCalendarBtnContainer.style.display = 'none';
+
   const badge = document.getElementById('admin-badge-indicator');
   if (badge) badge.style.display = 'none';
 
   // Refresh views to hide actions
   fetchAndRenderTeachers();
   renderNews(allNewsData);
+  fetchAndRenderCalendar();
 }
 
 // Bind clicks to Card actions (Edit/Delete)
@@ -1652,5 +1662,263 @@ function setupPDPABanner() {
     setTimeout(() => {
       banner.style.display = 'none';
     }, 400);
+  });
+}
+
+// 7. Dynamic School Calendar Logic
+// ==========================================================================
+
+let mockCalendarEvents = [
+  { id: 1, month_name: "มิถุนายน ๒๕๖๙", event_date: "๑๑ มิ.ย.", event_title: "พิธีไหว้ครู ประจำปีการศึกษา ๒๕๖๙", category: "activity" },
+  { id: 2, month_name: "มิถุนายน ๒๕๖๙", event_date: "๑๕ มิ.ย.", event_title: "วันหยุดชดเชยวันเฉลิมพระชนมพรรษาฯ", category: "holiday" },
+  { id: 3, month_name: "กรกฎาคม ๒๕๖๙", event_date: "๑๕-๑๗ ก.ค.", event_title: "การประเมินผลการเรียนกลางภาคเรียนที่ ๑", category: "exam" },
+  { id: 4, month_name: "กรกฎาคม ๒๕๖๙", event_date: "๒๘ ก.ค.", event_title: "วันหยุดราชการ วันเฉลิมพระชนมพรรษา ร.๑๐", category: "holiday" },
+  { id: 5, month_name: "สิงหาคม ๒๕๖๙", event_date: "๑๒ ส.ค.", event_title: "กิจกรรมวันแม่แห่งชาติ (หยุดเรียน ๑ วัน)", category: "activity" },
+  { id: 6, month_name: "สิงหาคม ๒๕๖๙", event_date: "๒๑ ส.ค.", event_title: "กิจกรรมทัศนศึกษา แหล่งเรียนรู้นอกห้องเรียน", category: "activity" },
+  { id: 7, month_name: "กันยายน ๒๕๖๙", event_date: "๒๑-๒๕ ก.ย.", event_title: "ประเมินผลปลายภาคเรียนที่ ๑ ปีการศึกษา ๒๕๖๙", category: "exam" },
+  { id: 8, month_name: "กันยายน ๒๕๖๙", event_date: "๓๐ ก.ย.", event_title: "วันสิ้นสุดภาคเรียนที่ ๑/๒๕๖๙ และปิดภาคเรียน", category: "holiday" }
+];
+
+let allCalendarEvents = [];
+
+async function fetchAndRenderCalendar() {
+  const grid = document.querySelector('.calendar-grid');
+  if (!grid) return;
+
+  try {
+    if (supabase) {
+      const { data, error } = await supabase
+        .from('calendar')
+        .select('*')
+        .order('id', { ascending: true });
+
+      if (!error && data) {
+        allCalendarEvents = data;
+      } else {
+        console.warn("Using mock calendar fallback:", error);
+        allCalendarEvents = mockCalendarEvents;
+      }
+    } else {
+      allCalendarEvents = mockCalendarEvents;
+    }
+  } catch (err) {
+    console.error("Database error fetching calendar, using mock:", err);
+    allCalendarEvents = mockCalendarEvents;
+  }
+
+  renderCalendar(allCalendarEvents);
+}
+
+function renderCalendar(events) {
+  const grid = document.querySelector('.calendar-grid');
+  if (!grid) return;
+
+  grid.innerHTML = '';
+
+  // Defined month order to keep rendering logical
+  const monthOrder = ["มิถุนายน ๒๕๖๙", "กรกฎาคม ๒๕๖๙", "สิงหาคม ๒๕๖๙", "กันยายน ๒๕๖๙"];
+
+  // Group events by month
+  const grouped = {};
+  events.forEach(event => {
+    if (!grouped[event.month_name]) {
+      grouped[event.month_name] = [];
+    }
+    grouped[event.month_name].push(event);
+  });
+
+  // Ensure all defined months are shown, even if they have no events currently
+  monthOrder.forEach(month => {
+    const monthEvents = grouped[month] || [];
+    
+    const card = document.createElement('div');
+    card.className = 'calendar-month-card';
+    card.style = 'background-color: var(--white); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: 20px; transition: var(--transition-smooth);';
+
+    let listHtml = '';
+    if (monthEvents.length === 0) {
+      listHtml = `<li style="font-size: 0.9rem; color: var(--gray-400); font-style: italic; text-align: center; padding: 10px 0; font-family: var(--font-prompt);">ไม่มีกิจกรรมในเดือนนี้</li>`;
+    } else {
+      monthEvents.forEach(event => {
+        let badgeColor = '';
+        let badgeBg = '';
+        if (event.category === 'exam') {
+          badgeColor = 'var(--primary-red)';
+          badgeBg = 'rgba(168, 30, 46, 0.1)';
+        } else if (event.category === 'holiday') {
+          badgeColor = '#2ec4b6';
+          badgeBg = 'rgba(46, 196, 182, 0.1)';
+        } else { // activity
+          badgeColor = '#E09E00';
+          badgeBg = 'rgba(224, 158, 0, 0.1)';
+        }
+
+        const adminControls = isAdminMode ? `
+          <div class="calendar-item-actions" style="margin-left: auto; display: flex; gap: 8px; flex-shrink: 0;">
+            <button class="btn-calendar-edit" data-id="${event.id}" title="แก้ไข" style="background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 0.85rem; transition: color 0.2s;"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn-calendar-delete" data-id="${event.id}" title="ลบ" style="background: none; border: none; color: var(--primary-red); cursor: pointer; font-size: 0.85rem; transition: color 0.2s;"><i class="fa-solid fa-trash-can"></i></button>
+          </div>
+        ` : '';
+
+        listHtml += `
+          <li style="display: flex; gap: 10px; align-items: flex-start; justify-content: space-between; border-bottom: 1px dashed var(--gray-100); padding-bottom: 8px; margin-bottom: 8px;">
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: ${badgeBg}; color: ${badgeColor}; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">${event.event_date}</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">${event.event_title}</span>
+            </div>
+            ${adminControls}
+          </li>
+        `;
+      });
+    }
+
+    card.innerHTML = `
+      <h3 style="margin: 0 0 15px; font-size: 1.15rem; color: var(--primary-red); border-bottom: 2px solid rgba(168, 30, 46, 0.1); padding-bottom: 8px; font-weight: 600;"><i class="fa-regular fa-calendar-check"></i> ${month}</h3>
+      <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px;">
+        ${listHtml}
+      </ul>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  // Bind edit/delete clicks
+  if (isAdminMode) {
+    bindCalendarAdminActions();
+  }
+}
+
+function setupCalendarAdmin() {
+  const addBtn = document.getElementById('add-calendar-event-btn');
+  const modal = document.getElementById('calendar-form-modal');
+  const form = document.getElementById('calendar-event-form');
+  const modalTitle = document.getElementById('calendar-modal-title');
+  const idInput = document.getElementById('calendar-event-id');
+  const monthInput = document.getElementById('calendar-month');
+  const dateInput = document.getElementById('calendar-date');
+  const titleInput = document.getElementById('calendar-title');
+  const categoryInput = document.getElementById('calendar-category');
+  const submitBtn = document.getElementById('calendar-form-submit-btn');
+
+  if (!addBtn || !modal || !form) return;
+
+  // Open add modal
+  addBtn.addEventListener('click', () => {
+    form.reset();
+    idInput.value = '';
+    modalTitle.textContent = 'เพิ่มกิจกรรมปฏิทิน';
+    submitBtn.textContent = 'บันทึกกิจกรรม';
+    modal.classList.add('open');
+  });
+
+  // Submit form
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'กำลังบันทึก...';
+
+    const eventId = idInput.value;
+    const eventData = {
+      month_name: monthInput.value,
+      event_date: dateInput.value,
+      event_title: titleInput.value,
+      category: categoryInput.value
+    };
+
+    try {
+      if (supabase) {
+        if (eventId) {
+          // Edit
+          const { error } = await supabase
+            .from('calendar')
+            .update(eventData)
+            .eq('id', eventId);
+          if (error) throw error;
+        } else {
+          // Add
+          const { error } = await supabase
+            .from('calendar')
+            .insert([eventData]);
+          if (error) throw error;
+        }
+      } else {
+        // Mock edit/add when offline
+        if (eventId) {
+          const idx = mockCalendarEvents.findIndex(ev => ev.id == eventId);
+          if (idx !== -1) {
+            mockCalendarEvents[idx] = { id: parseInt(eventId), ...eventData };
+          }
+        } else {
+          const newId = mockCalendarEvents.length > 0 ? Math.max(...mockCalendarEvents.map(e => e.id)) + 1 : 1;
+          mockCalendarEvents.push({ id: newId, ...eventData });
+        }
+      }
+
+      modal.classList.remove('open');
+      await fetchAndRenderCalendar();
+    } catch (err) {
+      console.error("Error saving calendar event:", err);
+      alert("เกิดข้อผิดพลาดในการบันทึกกิจกรรม: " + err.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'บันทึกกิจกรรม';
+    }
+  });
+}
+
+function bindCalendarAdminActions() {
+  // Edit click
+  document.querySelectorAll('.btn-calendar-edit').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-id');
+      const event = allCalendarEvents.find(e => e.id == id);
+      if (event) {
+        const modal = document.getElementById('calendar-form-modal');
+        const modalTitle = document.getElementById('calendar-modal-title');
+        const idInput = document.getElementById('calendar-event-id');
+        const monthInput = document.getElementById('calendar-month');
+        const dateInput = document.getElementById('calendar-date');
+        const titleInput = document.getElementById('calendar-title');
+        const categoryInput = document.getElementById('calendar-category');
+        const submitBtn = document.getElementById('calendar-form-submit-btn');
+
+        if (modal) {
+          idInput.value = event.id;
+          monthInput.value = event.month_name;
+          dateInput.value = event.event_date;
+          titleInput.value = event.event_title;
+          categoryInput.value = event.category;
+
+          modalTitle.textContent = 'แก้ไขกิจกรรมปฏิทิน';
+          submitBtn.textContent = 'อัปเดตกิจกรรม';
+          modal.classList.add('open');
+        }
+      }
+    });
+  });
+
+  // Delete click
+  document.querySelectorAll('.btn-calendar-delete').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-id');
+      if (confirm("คุณต้องการลบกิจกรรมนี้ออกจากปฏิทินใช่หรือไม่?")) {
+        try {
+          if (supabase) {
+            const { error } = await supabase
+              .from('calendar')
+              .delete()
+              .eq('id', id);
+            if (error) throw error;
+          } else {
+            // Mock delete
+            mockCalendarEvents = mockCalendarEvents.filter(e => e.id != id);
+          }
+          await fetchAndRenderCalendar();
+        } catch (err) {
+          console.error("Error deleting calendar event:", err);
+          alert("เกิดข้อผิดพลาดในการลบกิจกรรม: " + err.message);
+        }
+      }
+    });
   });
 }

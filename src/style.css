@@ -2314,3 +2314,14 @@ body.admin-mode-active .news-card .news-card-actions {
     justify-content: center;
   }
 }
+
+/* Calendar Admin Item Actions Hover Styles */
+.btn-calendar-edit:hover {
+  color: var(--secondary-yellow) !important;
+  transform: scale(1.15);
+}
+
+.btn-calendar-delete:hover {
+  color: var(--primary-red) !important;
+  transform: scale(1.15);
+}

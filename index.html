@@ -456,6 +456,13 @@
         <div class="title-bar center"></div>
       </div>
 
+      <!-- Admin Actions Container (Visible only when logged in) -->
+      <div id="admin-calendar-btn-container" style="display: none; text-align: center; margin-bottom: 25px;">
+        <button id="add-calendar-event-btn" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.9rem; font-family: var(--font-prompt); border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+          <i class="fa-solid fa-calendar-plus"></i> จัดการปฏิทินกิจกรรม [ + ]
+        </button>
+      </div>
+
       <!-- Categories Legends -->
       <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; font-family: var(--font-prompt); font-size: 0.85rem;">
         <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background-color: #E09E00; display: inline-block;"></span> กิจกรรมโรงเรียน</span>
@@ -953,6 +960,54 @@
           </div>
 
           <button type="submit" class="btn btn-primary" id="news-form-submit-btn" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">บันทึกข่าวสาร</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar Event Form Modal -->
+  <div class="modal-overlay" id="calendar-form-modal">
+    <div class="modal-card" style="max-width: 450px;">
+      <button class="modal-close-btn">&times;</button>
+      <div class="modal-header-accent"></div>
+      <div class="modal-body-content" style="padding: 30px 20px; box-sizing: border-box; font-family: var(--font-prompt);">
+        <h3 class="modal-title-text" id="calendar-modal-title" style="font-size: 1.5rem; margin-bottom: 5px; color: var(--dark-color); font-weight: 600;">เพิ่มกิจกรรมปฏิทิน</h3>
+        <p class="modal-subtitle-text" style="color: var(--gray-500); margin-top: 0; margin-bottom: 15px; font-size: 0.9rem;">กรอกรายละเอียดของกิจกรรมเพื่อแสดงบนปฏิทินโรงเรียน</p>
+        <div class="modal-divider" style="height: 1px; background-color: var(--gray-200); margin-bottom: 20px;"></div>
+        
+        <form id="calendar-event-form">
+          <input type="hidden" id="calendar-event-id">
+          
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="calendar-month" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-regular fa-calendar"></i> เดือนประจำกิจกรรม <span class="required" style="color: var(--primary-red);">*</span></label>
+            <select id="calendar-month" required style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box; background-color: var(--white); font-family: var(--font-prompt);">
+              <option value="มิถุนายน ๒๕๖๙">มิถุนายน ๒๕๖๙</option>
+              <option value="กรกฎาคม ๒๕๖๙">กรกฎาคม ๒๕๖๙</option>
+              <option value="สิงหาคม ๒๕๖๙">สิงหาคม ๒๕๖๙</option>
+              <option value="กันยายน ๒๕๖๙">กันยายน ๒๕๖๙</option>
+            </select>
+          </div>
+
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="calendar-date" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-calendar-day"></i> วันที่แสดงผล <span class="required" style="color: var(--primary-red);">*</span></label>
+            <input type="text" id="calendar-date" required placeholder="เช่น ๑๑ มิ.ย. หรือ ๑๕-๑๗ ก.ค." style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box; font-family: var(--font-prompt);">
+          </div>
+
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="calendar-title" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-heading"></i> ชื่องานกิจกรรม <span class="required" style="color: var(--primary-red);">*</span></label>
+            <input type="text" id="calendar-title" required placeholder="เช่น พิธีไหว้ครู ประจำปีการศึกษา ๒๕๖๙" style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box; font-family: var(--font-prompt);">
+          </div>
+
+          <div class="form-group mb-6" style="margin-bottom: 24px;">
+            <label for="calendar-category" style="font-weight: 500; display: block; margin-bottom: 6px;"><i class="fa-solid fa-tags"></i> ประเภทกิจกรรม <span class="required" style="color: var(--primary-red);">*</span></label>
+            <select id="calendar-category" required style="width: 100%; padding: 10px; border: 1px solid var(--gray-300); border-radius: 6px; box-sizing: border-box; background-color: var(--white); font-family: var(--font-prompt);">
+              <option value="activity">🟡 กิจกรรมโรงเรียน</option>
+              <option value="exam">🔴 วัดผลประเมินผล (การสอบ)</option>
+              <option value="holiday">🟢 วันหยุดเรียน / วันหยุดราชการ</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="calendar-form-submit-btn" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600; font-family: var(--font-prompt);">บันทึกกิจกรรม</button>
         </form>
       </div>
     </div>
