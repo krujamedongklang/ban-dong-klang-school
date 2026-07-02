@@ -141,6 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupLightbox();
   setupStudentStatsToggle();
   setupMobileDropdown();
+  setupPDPABanner();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -765,9 +766,20 @@ function setupAdminDashboard() {
   const modalTitle = document.getElementById('teacher-modal-title');
   const submitBtn = document.getElementById('teacher-form-submit-btn');
 
+  const emailInput = document.getElementById('admin-email');
+
   if (!loginTrigger) return;
 
-  // 1. Manage Modal overlays close buttons
+  // 1. Check active Supabase session on load
+  if (supabase) {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        loginAdmin();
+      }
+    });
+  }
+
+  // 1b. Manage Modal overlays close buttons
   document.querySelectorAll('.modal-overlay').forEach(modalOverlay => {
     const closeBtn = modalOverlay.querySelector('.modal-close-btn');
     if (closeBtn) {
@@ -788,6 +800,7 @@ function setupAdminDashboard() {
         logoutAdmin();
       }
     } else {
+      if (emailInput) emailInput.value = '';
       passwordInput.value = '';
       loginError.style.display = 'none';
       loginModal.classList.add('open');
@@ -795,14 +808,50 @@ function setupAdminDashboard() {
   });
 
   // 3. Login Submit
-  loginForm.addEventListener('submit', (e) => {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const pass = passwordInput.value;
-    if (pass === 'admin') {
-      loginAdmin();
-      loginModal.classList.remove('open');
-    } else {
+    const email = emailInput ? emailInput.value : '';
+    const password = passwordInput.value;
+    
+    const submitButton = loginForm.querySelector('button[type="submit"]');
+    if (submitButton) {
+      submitButton.disabled = true;
+      submitButton.textContent = 'กำลังตรวจสอบ...';
+    }
+
+    try {
+      if (supabase) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if (!error) {
+          loginAdmin();
+          loginModal.classList.remove('open');
+        } else {
+          loginError.textContent = "อีเมลหรือรหัสผ่านไม่ถูกต้อง: " + error.message;
+          loginError.style.display = 'block';
+        }
+      } else {
+        // Mock offline fallback
+        if (email === 'admin@dongklang.com' && password === 'admin') {
+          loginAdmin();
+          loginModal.classList.remove('open');
+        } else {
+          loginError.textContent = "อีเมลหรือรหัสผ่านไม่ถูกต้อง!";
+          loginError.style.display = 'block';
+        }
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      loginError.textContent = "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ!";
       loginError.style.display = 'block';
+    } finally {
+      if (submitButton) {
+        submitButton.disabled = false;
+        submitButton.textContent = 'เข้าสู่ระบบ';
+      }
     }
   });
 
@@ -980,8 +1029,15 @@ function loginAdmin() {
 }
 
 // Helper to logout Admin Mode
-function logoutAdmin() {
+async function logoutAdmin() {
   isAdminMode = false;
+  if (supabase) {
+    try {
+      await supabase.auth.signOut();
+    } catch (e) {
+      console.error("SignOut error:", e);
+    }
+  }
   document.body.classList.remove('admin-mode-active');
   
   const addBtnContainer = document.getElementById('admin-add-btn-container');
@@ -1556,20 +1612,45 @@ function setupStudentStatsToggle() {
 }
 
 function setupMobileDropdown() {
-  const toggle = document.querySelector('.drawer-dropdown-toggle');
-  const menu = document.querySelector('.drawer-dropdown-menu');
-  if (toggle && menu) {
-    toggle.addEventListener('click', () => {
-      const isVisible = menu.style.display === 'block';
-      if (isVisible) {
-        menu.style.display = 'none';
-        toggle.querySelector('i').style.transform = 'rotate(0deg)';
-        toggle.querySelector('i').className = 'fa-solid fa-chevron-down';
-      } else {
-        menu.style.display = 'block';
-        toggle.querySelector('i').style.transform = 'rotate(180deg)';
-        toggle.querySelector('i').className = 'fa-solid fa-chevron-up';
-      }
-    });
+  const dropdowns = document.querySelectorAll('.drawer-dropdown');
+  dropdowns.forEach(dropdown => {
+    const toggle = dropdown.querySelector('.drawer-dropdown-toggle');
+    const menu = dropdown.querySelector('.drawer-dropdown-menu');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => {
+        const isVisible = menu.style.display === 'block';
+        if (isVisible) {
+          menu.style.display = 'none';
+          toggle.querySelector('i').style.transform = 'rotate(0deg)';
+          toggle.querySelector('i').className = 'fa-solid fa-chevron-down';
+        } else {
+          menu.style.display = 'block';
+          toggle.querySelector('i').style.transform = 'rotate(180deg)';
+          toggle.querySelector('i').className = 'fa-solid fa-chevron-up';
+        }
+      });
+    }
+  });
+}
+
+function setupPDPABanner() {
+  const banner = document.getElementById('pdpa-cookie-banner');
+  const acceptBtn = document.getElementById('pdpa-cookie-accept-btn');
+  
+  if (!banner || !acceptBtn) return;
+  
+  // Show only if not consented yet
+  if (!localStorage.getItem('pdpa_consent')) {
+    banner.style.display = 'block';
   }
+  
+  acceptBtn.addEventListener('click', () => {
+    localStorage.setItem('pdpa_consent', 'true');
+    banner.style.opacity = '0';
+    banner.style.transform = 'translateY(50px)';
+    banner.style.transition = 'all 0.4s ease';
+    setTimeout(() => {
+      banner.style.display = 'none';
+    }, 400);
+  });
 }

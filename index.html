@@ -7,16 +7,16 @@
   <title>โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)</title>
   
   <!-- Favicon / Site Icon (Sets school logo in Google Search Results) -->
-  <link rel="icon" type="image/png" href="/logo.png">
-  <link rel="shortcut icon" type="image/png" href="/logo.png">
-  <link rel="apple-touch-icon" href="/logo.png">
+  <link rel="icon" type="image/webp" href="/logo.webp">
+  <link rel="shortcut icon" type="image/webp" href="/logo.webp">
+  <link rel="apple-touch-icon" href="/logo.webp">
   
   <!-- Search Engine Meta Tags (Declares official site name instead of hosting name) -->
   <meta name="application-name" content="โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)">
   <meta property="og:site_name" content="โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)">
   <meta property="og:title" content="โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)">
   <meta property="og:description" content="เว็บไซต์อย่างเป็นทางการของโรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑) สังกัดสำนักงานเขตพื้นที่การศึกษาประถมศึกษาตราด">
-  <meta property="og:image" content="https://bandongklangschool.onrender.com/logo.png">
+  <meta property="og:image" content="https://bandongklangschool.onrender.com/logo.webp">
   <meta property="og:url" content="https://bandongklangschool.onrender.com/">
   <meta property="og:type" content="website">
   
@@ -42,7 +42,7 @@
     "@type": "School",
     "name": "โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)",
     "url": "https://bandongklangschool.onrender.com/",
-    "logo": "https://bandongklangschool.onrender.com/logo.png",
+    "logo": "https://bandongklangschool.onrender.com/logo.webp",
     "image": "https://bandongklangschool.onrender.com/director.png",
     "description": "เว็บไซต์อย่างเป็นทางการของโรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑) อำเภอเขาสมิง จังหวัดตราด สังกัดสำนักงานเขตพื้นที่การศึกษาประถมศึกษาตราด",
     "address": {
@@ -63,7 +63,7 @@
   <header class="main-header">
     <div class="container header-container">
       <a href="javascript:void(0)" class="logo-area">
-        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="header-logo">
+        <img src="/logo.webp" alt="ตราโรงเรียนบ้านดงกลาง" class="header-logo">
         <div class="logo-text">
           <span class="school-name">โรงเรียนบ้านดงกลาง</span>
           <span class="sub-name">(ธนาคารกรุงเทพ ๓๑)</span>
@@ -74,7 +74,13 @@
       <nav class="desktop-nav">
         <ul>
           <li><a href="#hero" class="nav-link active">หน้าแรก</a></li>
-          <li><a href="#about" class="nav-link">ข้อมูลโรงเรียน</a></li>
+          <li class="dropdown">
+            <a href="#about" class="nav-link dropdown-toggle" style="color: var(--dark-color); font-weight: 500; font-family: var(--font-prompt); transition: var(--transition-smooth); display: flex; align-items: center; gap: 4px;">ข้อมูลโรงเรียน <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; margin-top: 2px;"></i></a>
+            <ul class="dropdown-menu">
+              <li><a href="#about" class="nav-link">ข้อมูลทั่วไป</a></li>
+              <li><a href="#calendar" class="nav-link">ปฏิทินกิจกรรมโรงเรียน</a></li>
+            </ul>
+          </li>
           <li><a href="#teachers" class="nav-link">ทำเนียบบุคลากร</a></li>
           <li><a href="#administration" class="nav-link">ฝ่ายบริหารงาน</a></li>
           <li class="dropdown">
@@ -103,7 +109,7 @@
   <aside class="mobile-drawer">
     <div class="drawer-header">
       <div class="drawer-logo">
-        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="drawer-logo-img">
+        <img src="/logo.webp" alt="ตราโรงเรียนบ้านดงกลาง" class="drawer-logo-img">
         <span class="drawer-title">บ้านดงกลาง</span>
       </div>
       <button class="drawer-close-btn">&times;</button>
@@ -111,7 +117,15 @@
     <nav class="drawer-nav">
       <ul>
         <li><a href="#hero" class="drawer-link">หน้าแรก</a></li>
-        <li><a href="#about" class="drawer-link">ข้อมูลโรงเรียน</a></li>
+        <li class="drawer-dropdown">
+          <div class="drawer-dropdown-toggle" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; color: var(--dark-color); font-weight: 600; font-size: 1.1rem; cursor: pointer; border-bottom: 1px solid var(--gray-100);">
+            ข้อมูลโรงเรียน <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--gray-500); transition: transform 0.3s;"></i>
+          </div>
+          <ul class="drawer-dropdown-menu" style="display: none; padding-left: 0; background-color: var(--gray-50); list-style: none; border-bottom: 1px solid var(--gray-100);">
+            <li><a href="#about" class="drawer-link" style="padding: 12px 30px; font-size: 1rem; color: var(--gray-700); display: block; transition: all 0.2s;"><i class="fa-solid fa-circle-info" style="font-size: 0.9rem; margin-right: 8px; color: var(--primary-red); width: 16px; text-align: center;"></i> ข้อมูลทั่วไป</a></li>
+            <li><a href="#calendar" class="drawer-link" style="padding: 12px 30px; font-size: 1rem; color: var(--gray-700); display: block; transition: all 0.2s;"><i class="fa-solid fa-calendar-days" style="font-size: 0.9rem; margin-right: 8px; color: var(--primary-red); width: 16px; text-align: center;"></i> ปฏิทินกิจกรรมโรงเรียน</a></li>
+          </ul>
+        </li>
         <li><a href="#teachers" class="drawer-link">ทำเนียบบุคลากร</a></li>
         <li><a href="#administration" class="drawer-link">ฝ่ายบริหารงาน</a></li>
         <li class="drawer-dropdown">
@@ -143,7 +157,7 @@
       </div>
       <div class="hero-logo-container">
         <div class="logo-glow-effect animate-float"></div>
-        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="hero-logo-img animate-float">
+        <img src="/logo.webp" alt="ตราโรงเรียนบ้านดงกลาง" class="hero-logo-img animate-float">
       </div>
     </div>
     
@@ -432,6 +446,90 @@
     </div>
   </section>
 
+  <!-- School Calendar Section -->
+  <section id="calendar" class="calendar-section py-20 bg-light" style="border-bottom: 1px solid var(--gray-100);">
+    <div class="container">
+      <div class="section-title-area text-center">
+        <span class="sub-title">ACADEMIC CALENDAR</span>
+        <h2 class="section-title">ปฏิทินกิจกรรมโรงเรียน</h2>
+        <p style="color: var(--gray-500); font-size: 0.95rem; margin-top: 5px; font-family: var(--font-prompt);">ปฏิทินกิจกรรมการศึกษา ภาคเรียนที่ ๑ ปีการศึกษา ๒๕๖๙</p>
+        <div class="title-bar center"></div>
+      </div>
+
+      <!-- Categories Legends -->
+      <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-bottom: 30px; font-family: var(--font-prompt); font-size: 0.85rem;">
+        <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background-color: #E09E00; display: inline-block;"></span> กิจกรรมโรงเรียน</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background-color: var(--primary-red); display: inline-block;"></span> วัดผลประเมินผล (การสอบ)</span>
+        <span style="display: inline-flex; align-items: center; gap: 6px;"><span style="width: 12px; height: 12px; border-radius: 3px; background-color: #2ec4b6; display: inline-block;"></span> วันหยุดเรียน / วันหยุดราชการ</span>
+      </div>
+
+      <!-- Grid of Months -->
+      <div class="calendar-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; font-family: var(--font-prompt);">
+        
+        <!-- Month 1: มิถุนายน 2569 -->
+        <div class="calendar-month-card" style="background-color: var(--white); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: 20px; transition: var(--transition-smooth);">
+          <h3 style="margin: 0 0 15px; font-size: 1.15rem; color: var(--primary-red); border-bottom: 2px solid rgba(168, 30, 46, 0.1); padding-bottom: 8px; font-weight: 600;"><i class="fa-regular fa-calendar-check"></i> มิถุนายน ๒๕๖๙</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(224, 158, 0, 0.1); color: #E09E00; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๑๑ มิ.ย.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">พิธีไหว้ครู ประจำปีการศึกษา ๒๕๖๙</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(46, 196, 182, 0.1); color: #2ec4b6; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๑๕ มิ.ย.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">วันหยุดชดเชยวันเฉลิมพระชนมพรรษาฯ</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Month 2: กรกฎาคม 2569 -->
+        <div class="calendar-month-card" style="background-color: var(--white); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: 20px; transition: var(--transition-smooth);">
+          <h3 style="margin: 0 0 15px; font-size: 1.15rem; color: var(--primary-red); border-bottom: 2px solid rgba(168, 30, 46, 0.1); padding-bottom: 8px; font-weight: 600;"><i class="fa-regular fa-calendar-check"></i> กรกฎาคม ๒๕๖๙</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(168, 30, 46, 0.1); color: var(--primary-red); font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๑๕-๑๗ ก.ค.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">การประเมินผลการเรียนกลางภาคเรียนที่ ๑</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(46, 196, 182, 0.1); color: #2ec4b6; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๒๘ ก.ค.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">วันหยุดราชการ วันเฉลิมพระชนมพรรษา ร.๑๐</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Month 3: สิงหาคม 2569 -->
+        <div class="calendar-month-card" style="background-color: var(--white); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: 20px; transition: var(--transition-smooth);">
+          <h3 style="margin: 0 0 15px; font-size: 1.15rem; color: var(--primary-red); border-bottom: 2px solid rgba(168, 30, 46, 0.1); padding-bottom: 8px; font-weight: 600;"><i class="fa-regular fa-calendar-check"></i> สิงหาคม ๒๕๖๙</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(224, 158, 0, 0.1); color: #E09E00; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๑๒ ส.ค.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">กิจกรรมวันแม่แห่งชาติ (หยุดเรียน ๑ วัน)</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(224, 158, 0, 0.1); color: #E09E00; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๒๑ ส.ค.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">กิจกรรมทัศนศึกษา แหล่งเรียนรู้นอกห้องเรียน</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Month 4: กันยายน 2569 -->
+        <div class="calendar-month-card" style="background-color: var(--white); border-radius: var(--border-radius-md); box-shadow: var(--shadow-sm); border: 1px solid var(--gray-200); padding: 20px; transition: var(--transition-smooth);">
+          <h3 style="margin: 0 0 15px; font-size: 1.15rem; color: var(--primary-red); border-bottom: 2px solid rgba(168, 30, 46, 0.1); padding-bottom: 8px; font-weight: 600;"><i class="fa-regular fa-calendar-check"></i> กันยายน ๒๕๖๙</h3>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px;">
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(168, 30, 46, 0.1); color: var(--primary-red); font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๒๑-๒๕ ก.ย.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">ประเมินผลปลายภาคเรียนที่ ๑ ปีการศึกษา ๒๕๖๙</span>
+            </li>
+            <li style="display: flex; gap: 10px; align-items: flex-start;">
+              <span style="background-color: rgba(46, 196, 182, 0.1); color: #2ec4b6; font-weight: 600; font-size: 0.8rem; padding: 3px 8px; border-radius: 4px; white-space: nowrap; margin-top: 2px;">๓๐ ก.ย.</span>
+              <span style="font-size: 0.9rem; color: var(--gray-700); line-height: 1.4;">วันสิ้นสุดภาคเรียนที่ ๑/๒๕๖๙ และปิดภาคเรียน</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
   <!-- News & Announcements Section (Connected to Supabase) -->
   <section id="news" class="news-section py-20">
     <div class="container">
@@ -647,7 +745,7 @@
   <footer class="main-footer">
     <div class="container footer-container">
       <div class="footer-brand">
-        <img src="/logo.png" alt="ตราโรงเรียนบ้านดงกลาง" class="footer-logo">
+        <img src="/logo.webp" alt="ตราโรงเรียนบ้านดงกลาง" class="footer-logo">
         <div>
           <h3>โรงเรียนบ้านดงกลาง</h3>
           <p>(ธนาคารกรุงเทพ ๓๑) จ.ตราด</p>
@@ -730,12 +828,16 @@
           <p class="text-gray-500" style="font-size: 0.9rem; color: var(--gray-500); margin: 0;">สำหรับผู้ดูแลเว็บไซต์โรงเรียนบ้านดงกลาง</p>
         </div>
         <form id="admin-login-form">
-          <div class="form-group mb-6" style="margin-bottom: 24px;">
-            <label for="admin-password" style="font-weight: 500; display: block; margin-bottom: 8px;"><i class="fa-solid fa-key"></i> รหัสผ่านผู้ดูแลระบบ</label>
-            <input type="password" id="admin-password" required placeholder="กรอกรหัสผ่านเพื่อเข้าใช้งาน" style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; box-sizing: border-box;">
-            <span id="login-error-msg" class="text-red" style="font-size: 0.85rem; display: none; margin-top: 5px; color: var(--primary-red);"><i class="fa-solid fa-circle-exclamation"></i> รหัสผ่านไม่ถูกต้อง!</span>
+          <div class="form-group mb-4" style="margin-bottom: 16px;">
+            <label for="admin-email" style="font-weight: 500; display: block; margin-bottom: 8px;"><i class="fa-solid fa-envelope"></i> อีเมลแอดมิน</label>
+            <input type="email" id="admin-email" required placeholder="example@dongklang.com" style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; box-sizing: border-box;">
           </div>
-          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">ยืนยันความปลอดภัย</button>
+          <div class="form-group mb-6" style="margin-bottom: 24px;">
+            <label for="admin-password" style="font-weight: 500; display: block; margin-bottom: 8px;"><i class="fa-solid fa-key"></i> รหัสผ่าน</label>
+            <input type="password" id="admin-password" required placeholder="กรอกรหัสผ่าน" style="width: 100%; padding: 12px; border: 1px solid var(--gray-300); border-radius: 8px; box-sizing: border-box;">
+            <span id="login-error-msg" class="text-red" style="font-size: 0.85rem; display: none; margin-top: 5px; color: var(--primary-red);"><i class="fa-solid fa-circle-exclamation"></i> อีเมลหรือรหัสผ่านไม่ถูกต้อง!</span>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; border-radius: 8px; cursor: pointer; font-size: 1rem; border: none; font-weight: 600;">เข้าสู่ระบบ</button>
         </form>
       </div>
     </div>
@@ -867,6 +969,22 @@
     <span class="messenger-tooltip">คุยกับโรงเรียน</span>
     <i class="fa-brands fa-facebook-messenger"></i>
   </a>
+
+  <!-- Floating PDPA Cookie Consent Banner -->
+  <div id="pdpa-cookie-banner" class="pdpa-banner-container" style="display: none;">
+    <div class="pdpa-banner-content-wrap">
+      <div class="pdpa-banner-icon-side">
+        <i class="fa-solid fa-cookie-bite"></i>
+      </div>
+      <div class="pdpa-banner-text-side">
+        <h5>นโยบายความเป็นส่วนตัวและคุกกี้</h5>
+        <p>เว็บไซต์ของโรงเรียนบ้านดงกลางใช้คุกกี้เพื่อจัดเก็บข้อมูลและมอบประสบการณ์การใช้งานที่ดีที่สุดแก่ท่าน การใช้งานเว็บต่อถือเป็นการยินยอม <a href="javascript:void(0)" style="color: var(--secondary-yellow); text-decoration: underline;">อ่านนโยบายคุกกี้</a></p>
+      </div>
+      <div class="pdpa-banner-action-side">
+        <button id="pdpa-cookie-accept-btn" class="pdpa-btn-accept">ยอมรับทั้งหมด</button>
+      </div>
+    </div>
+  </div>
 
   <!-- JavaScript Entry Point -->
   <script type="module" src="/src/main.js"></script>

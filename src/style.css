@@ -2201,3 +2201,116 @@ body.admin-mode-active .news-card .news-card-actions {
     box-shadow: 0 0 0 0 rgba(0, 106, 255, 0);
   }
 }
+
+/* PDPA Cookie Banner Styling */
+.pdpa-banner-container {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  right: 25px;
+  background: rgba(25, 25, 25, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-md);
+  padding: 16px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  z-index: 99999;
+  font-family: var(--font-prompt);
+  animation: slideUpPDPA 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes slideUpPDPA {
+  from {
+    transform: translateY(100px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.pdpa-banner-content-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pdpa-banner-icon-side {
+  font-size: 2.2rem;
+  color: var(--secondary-yellow);
+  flex-shrink: 0;
+}
+
+.pdpa-banner-text-side {
+  flex: 1;
+}
+
+.pdpa-banner-text-side h5 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+  color: var(--white);
+  font-weight: 600;
+}
+
+.pdpa-banner-text-side p {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.5;
+}
+
+.pdpa-banner-action-side {
+  flex-shrink: 0;
+}
+
+.pdpa-btn-accept {
+  background-color: var(--secondary-yellow);
+  color: var(--dark-color);
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  font-family: var(--font-prompt);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pdpa-btn-accept:hover {
+  background-color: var(--secondary-yellow-hover);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .pdpa-banner-container {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    border-bottom: none;
+    padding: 18px 20px;
+  }
+  
+  .pdpa-banner-content-wrap {
+    flex-direction: column;
+    text-align: center;
+    gap: 15px;
+  }
+  
+  .pdpa-banner-action-side {
+    width: 100%;
+  }
+  
+  .pdpa-btn-accept {
+    width: 100%;
+    justify-content: center;
+  }
+}
