@@ -847,7 +847,7 @@ function setupAdminDashboard() {
       }
     } catch (err) {
       console.error("Login error:", err);
-      loginError.textContent = "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ!";
+      loginError.textContent = "เกิดข้อผิดพลาดในการเชื่อมต่อระบบ: " + (err.message || err);
       loginError.style.display = 'block';
     } finally {
       if (submitButton) {
