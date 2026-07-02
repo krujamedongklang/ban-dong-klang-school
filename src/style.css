@@ -612,7 +612,9 @@ ul {
 /* Director Card */
 .director-card-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
 }
 
 .director-card {
