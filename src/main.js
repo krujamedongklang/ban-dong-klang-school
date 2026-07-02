@@ -142,8 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupStudentStatsToggle();
   setupMobileDropdown();
   setupPDPABanner();
-  fetchAndRenderCalendar();
-  setupCalendarAdmin();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -1006,9 +1004,6 @@ function loginAdmin() {
   const addNewsBtnContainer = document.getElementById('admin-news-btn-container');
   if (addNewsBtnContainer) addNewsBtnContainer.style.display = 'block';
 
-  const addCalendarBtnContainer = document.getElementById('admin-calendar-btn-container');
-  if (addCalendarBtnContainer) addCalendarBtnContainer.style.display = 'block';
-
   // Add the green floating badge indicator
   let badge = document.getElementById('admin-badge-indicator');
   if (!badge) {
@@ -1031,7 +1026,6 @@ function loginAdmin() {
   // Refresh views to display card actions
   fetchAndRenderTeachers();
   renderNews(allNewsData);
-  fetchAndRenderCalendar();
 }
 
 // Helper to logout Admin Mode
@@ -1052,16 +1046,12 @@ async function logoutAdmin() {
   const addNewsBtnContainer = document.getElementById('admin-news-btn-container');
   if (addNewsBtnContainer) addNewsBtnContainer.style.display = 'none';
 
-  const addCalendarBtnContainer = document.getElementById('admin-calendar-btn-container');
-  if (addCalendarBtnContainer) addCalendarBtnContainer.style.display = 'none';
-
   const badge = document.getElementById('admin-badge-indicator');
   if (badge) badge.style.display = 'none';
 
   // Refresh views to hide actions
   fetchAndRenderTeachers();
   renderNews(allNewsData);
-  fetchAndRenderCalendar();
 }
 
 // Bind clicks to Card actions (Edit/Delete)
