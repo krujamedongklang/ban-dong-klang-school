@@ -135,6 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupAdminDashboard();
   setupLightbox();
   setupStudentStatsToggle();
+  setupMobileDropdown();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -1533,4 +1534,23 @@ function setupStudentStatsToggle() {
       toggleBtn.innerHTML = `ซ่อนรายละเอียดรายชั้นเรียน <i class="fa-solid fa-chevron-up" style="margin-left: 6px;"></i>`;
     }
   });
+}
+
+function setupMobileDropdown() {
+  const toggle = document.querySelector('.drawer-dropdown-toggle');
+  const menu = document.querySelector('.drawer-dropdown-menu');
+  if (toggle && menu) {
+    toggle.addEventListener('click', () => {
+      const isVisible = menu.style.display === 'block';
+      if (isVisible) {
+        menu.style.display = 'none';
+        toggle.querySelector('i').style.transform = 'rotate(0deg)';
+        toggle.querySelector('i').className = 'fa-solid fa-chevron-down';
+      } else {
+        menu.style.display = 'block';
+        toggle.querySelector('i').style.transform = 'rotate(180deg)';
+        toggle.querySelector('i').className = 'fa-solid fa-chevron-up';
+      }
+    });
+  }
 }
