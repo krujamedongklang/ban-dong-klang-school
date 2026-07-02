@@ -1681,10 +1681,51 @@ let mockCalendarEvents = [
 
 let allCalendarEvents = [];
 
+// Helper to translate Arabic numbers to Thai numbers
+function toThaiNumbers(numStr) {
+  const arabic = ['0','1','2','3','4','5','6','7','8','9'];
+  const thai = ['๐','๑','๒','๓','๔','๕','๖','๗','๘','๙'];
+  let result = numStr.toString();
+  for (let i = 0; i < 10; i++) {
+    result = result.replaceAll(arabic[i], thai[i]);
+  }
+  return result;
+}
+
+// Helper to convert standard date string YYYY-MM-DD to Thai calendar format
+function parseApiDateToThaiCalendar(dateStr) {
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return null;
+  const yearAD = parseInt(parts[0]);
+  const monthIdx = parseInt(parts[1]) - 1;
+  const day = parseInt(parts[2]);
+
+  const yearBE = yearAD + 543; // Buddhist Era conversion (e.g. 2026 + 543 = 2569)
+
+  const thaiMonthsFull = [
+    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+    "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+  ];
+
+  const thaiMonthsShort = [
+    "ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.",
+    "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."
+  ];
+
+  const monthName = `${thaiMonthsFull[monthIdx]} ${toThaiNumbers(yearBE)}`;
+  const dateLabel = `${toThaiNumbers(day)} ${thaiMonthsShort[monthIdx]}`;
+
+  return {
+    month_name: monthName,
+    event_date: dateLabel
+  };
+}
+
 async function fetchAndRenderCalendar() {
   const grid = document.querySelector('.calendar-grid');
   if (!grid) return;
 
+  let dbEvents = [];
   try {
     if (supabase) {
       const { data, error } = await supabase
@@ -1693,18 +1734,54 @@ async function fetchAndRenderCalendar() {
         .order('id', { ascending: true });
 
       if (!error && data) {
-        allCalendarEvents = data;
+        dbEvents = data;
       } else {
         console.warn("Using mock calendar fallback:", error);
-        allCalendarEvents = mockCalendarEvents;
+        dbEvents = mockCalendarEvents;
       }
     } else {
-      allCalendarEvents = mockCalendarEvents;
+      dbEvents = mockCalendarEvents;
     }
   } catch (err) {
     console.error("Database error fetching calendar, using mock:", err);
-    allCalendarEvents = mockCalendarEvents;
+    dbEvents = mockCalendarEvents;
   }
+
+  // Fetch Public Holidays for current year 2026 dynamically
+  let apiHolidays = [];
+  try {
+    const currentYear = new Date().getFullYear();
+    const res = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${currentYear}/TH`);
+    if (res.ok) {
+      const holidays = await res.json();
+      // Only include holidays in the relevant academic term range (June - September)
+      apiHolidays = holidays
+        .filter(h => {
+          const month = parseInt(h.date.split('-')[1]);
+          return month >= 6 && month <= 9; // June to Sept
+        })
+        .map((h, idx) => {
+          const parsed = parseApiDateToThaiCalendar(h.date);
+          return {
+            id: `api-holiday-${idx}`,
+            month_name: parsed.month_name,
+            event_date: parsed.event_date,
+            event_title: h.localName,
+            category: 'holiday',
+            is_api: true
+          };
+        })
+        .filter(apiH => {
+          // De-duplicate: skip if custom DB event already has a holiday on this date
+          return !dbEvents.some(dbE => dbE.event_date === apiH.event_date && dbE.category === 'holiday');
+        });
+    }
+  } catch (apiErr) {
+    console.error("Failed to fetch public holidays from API:", apiErr);
+  }
+
+  // Merge custom database events and API public holidays
+  allCalendarEvents = [...dbEvents, ...apiHolidays];
 
   renderCalendar(allCalendarEvents);
 }
@@ -1753,7 +1830,7 @@ function renderCalendar(events) {
           badgeBg = 'rgba(224, 158, 0, 0.1)';
         }
 
-        const adminControls = isAdminMode ? `
+        const adminControls = (isAdminMode && !event.is_api) ? `
           <div class="calendar-item-actions" style="margin-left: auto; display: flex; gap: 8px; flex-shrink: 0;">
             <button class="btn-calendar-edit" data-id="${event.id}" title="แก้ไข" style="background: none; border: none; color: var(--gray-500); cursor: pointer; font-size: 0.85rem; transition: color 0.2s;"><i class="fa-solid fa-pen"></i></button>
             <button class="btn-calendar-delete" data-id="${event.id}" title="ลบ" style="background: none; border: none; color: var(--primary-red); cursor: pointer; font-size: 0.85rem; transition: color 0.2s;"><i class="fa-solid fa-trash-can"></i></button>
