@@ -134,6 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fetchAndRenderTeachers();
   setupAdminDashboard();
   setupLightbox();
+  setupStudentStatsToggle();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -1513,5 +1514,23 @@ function setupNewsSliderEvents() {
   window.addEventListener('resize', () => {
     currentNewsSlideIndex = 0;
     updateNewsSlider();
+  });
+}
+
+function setupStudentStatsToggle() {
+  const toggleBtn = document.getElementById('toggle-stats-btn');
+  const details = document.getElementById('student-stats-details');
+
+  if (!toggleBtn || !details) return;
+
+  toggleBtn.addEventListener('click', () => {
+    const isExpanded = details.style.display === 'flex';
+    if (isExpanded) {
+      details.style.display = 'none';
+      toggleBtn.innerHTML = `ดูรายละเอียดรายชั้นเรียน <i class="fa-solid fa-chevron-down" style="margin-left: 6px;"></i>`;
+    } else {
+      details.style.display = 'flex';
+      toggleBtn.innerHTML = `ซ่อนรายละเอียดรายชั้นเรียน <i class="fa-solid fa-chevron-up" style="margin-left: 6px;"></i>`;
+    }
   });
 }
