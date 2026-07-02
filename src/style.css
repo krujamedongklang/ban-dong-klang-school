@@ -2124,7 +2124,7 @@ body.admin-mode-active .news-card .news-card-actions {
 /* Floating Messenger Chat Button */
 .messenger-float-btn {
   position: fixed;
-  bottom: 25px;
+  bottom: 95px;
   right: 25px;
   width: 60px;
   height: 60px;
