@@ -273,6 +273,15 @@ ul {
   color: var(--gray-800);
   position: relative;
   padding: 8px 0;
+  transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link.dropdown-toggle i {
+  font-size: 0.72rem;
+  margin-top: 1px;
 }
 
 .nav-link::after {
