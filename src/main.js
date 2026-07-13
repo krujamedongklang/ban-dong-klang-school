@@ -142,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupStudentStatsToggle();
   setupMobileDropdown();
   setupPDPABanner();
+  updateStudentStatsDate();
 });
 
 // Navigation Bar Scroll Effect & Active Link Highlight
@@ -1609,6 +1610,39 @@ function setupStudentStatsToggle() {
       toggleBtn.innerHTML = `ซ่อนรายละเอียดรายชั้นเรียน <i class="fa-solid fa-chevron-up" style="margin-left: 6px;"></i>`;
     }
   });
+}
+
+function updateStudentStatsDate() {
+  const dateElement = document.getElementById('student-stats-date');
+  if (!dateElement) return;
+
+  const now = new Date();
+  const day = now.getDate();
+  const monthIdx = now.getMonth();
+  const yearBE = now.getFullYear() + 543;
+
+  const thaiMonths = [
+    "มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน",
+    "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"
+  ];
+
+  const monthName = thaiMonths[monthIdx];
+  
+  // Helper to convert numbers to Thai digits
+  const toThaiDigits = (num) => {
+    const arabic = ['0','1','2','3','4','5','6','7','8','9'];
+    const thai = ['๐','๑','๒','๓','๔','๕','๖','๗','๘','๙'];
+    let str = num.toString();
+    for (let i = 0; i < 10; i++) {
+      str = str.replaceAll(arabic[i], thai[i]);
+    }
+    return str;
+  };
+
+  const thaiDay = toThaiDigits(day);
+  const thaiYear = toThaiDigits(yearBE);
+
+  dateElement.innerHTML = `<i class="fa-solid fa-clock"></i> ข้อมูล ณ วันที่ ${thaiDay} ${monthName} ${thaiYear}`;
 }
 
 function setupMobileDropdown() {
