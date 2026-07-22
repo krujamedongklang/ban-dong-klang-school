@@ -35,26 +35,35 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/src/supabase-config.js"></script>
 
-  <!-- Structured Schema Data (JSON-LD) for School SEO -->
+  <!-- Structured Schema Data (JSON-LD) for School & Google Site Name -->
   <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "School",
-    "name": "โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)",
-    "url": "https://bandongklangschool.onrender.com/",
-    "logo": "https://bandongklangschool.onrender.com/logo.webp",
-    "image": "https://bandongklangschool.onrender.com/director.png",
-    "description": "เว็บไซต์อย่างเป็นทางการของโรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑) อำเภอเขาสมิง จังหวัดตราด สังกัดสำนักงานเขตพื้นที่การศึกษาประถมศึกษาตราด",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "122/1 หมู่ที่ 5",
-      "addressLocality": "ตำบลเขาสมิง",
-      "addressRegion": "อำเภอเขาสมิง",
-      "addressCountry": "TH",
-      "postalCode": "23130"
+  [
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)",
+      "alternateName": ["โรงเรียนบ้านดงกลาง", "โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ 31)"],
+      "url": "https://bandongklangschool.onrender.com/"
     },
-    "telephone": "065-929-4729"
-  }
+    {
+      "@context": "https://schema.org",
+      "@type": "School",
+      "name": "โรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑)",
+      "url": "https://bandongklangschool.onrender.com/",
+      "logo": "https://bandongklangschool.onrender.com/logo.webp",
+      "image": "https://bandongklangschool.onrender.com/director.png",
+      "description": "เว็บไซต์อย่างเป็นทางการของโรงเรียนบ้านดงกลาง (ธนาคารกรุงเทพ ๓๑) อำเภอเขาสมิง จังหวัดตราด สังกัดสำนักงานเขตพื้นที่การศึกษาประถมศึกษาตราด",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "122/1 หมู่ที่ 5",
+        "addressLocality": "ตำบลเขาสมิง",
+        "addressRegion": "อำเภอเขาสมิง",
+        "addressCountry": "TH",
+        "postalCode": "23130"
+      },
+      "telephone": "065-929-4729"
+    }
+  ]
   </script>
 </head>
 <body>
